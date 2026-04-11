@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { m, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -43,6 +43,9 @@ export function Hero({
   const scrollY = useScrollPosition();
   const prefersReducedMotion = useReducedMotion();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  const show = mounted || prefersReducedMotion;
 
   const heightClass = {
     full: 'min-h-screen',
@@ -73,8 +76,7 @@ export function Hero({
             </nav>
           )}
           <m.h1
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.5, ease: MECHANICAL_EASE }}
             className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold uppercase text-text-primary leading-[1.1] tracking-[-0.01em] max-w-4xl"
           >
@@ -82,8 +84,7 @@ export function Hero({
           </m.h1>
           {subtitle && (
             <m.p
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.45, delay: 0.15, ease: MECHANICAL_EASE }}
               className="font-sans text-lg md:text-xl text-text-muted leading-relaxed mt-6 max-w-2xl"
             >
@@ -155,8 +156,7 @@ export function Hero({
 
         {eyebrow && (
           <m.div
-            initial={prefersReducedMotion ? false : { opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={show ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: MECHANICAL_EASE }}
           >
             <Eyebrow dark immediate className="mb-6">{eyebrow}</Eyebrow>
@@ -164,8 +164,7 @@ export function Hero({
         )}
 
         <m.h1
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.55, delay: 0.12, ease: MECHANICAL_EASE }}
           className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6rem] font-bold uppercase text-white leading-[1.02] tracking-[-0.03em] max-w-4xl"
         >
@@ -174,8 +173,7 @@ export function Hero({
 
         {subtitle && (
           <m.p
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.45, delay: 0.28, ease: MECHANICAL_EASE }}
             className="font-sans text-lg md:text-xl text-text-on-dark/80 leading-relaxed mt-6 max-w-[600px] font-light"
           >
@@ -185,8 +183,7 @@ export function Hero({
 
         {buttons && (
           <m.div
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.4, delay: 0.42, ease: MECHANICAL_EASE }}
             className="flex flex-wrap gap-4 mt-10"
           >
@@ -205,8 +202,7 @@ export function Hero({
 
         {stats ? (
           <m.div
-            initial={prefersReducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={show ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.4, delay: 0.55 }}
             className="flex flex-wrap gap-x-10 gap-y-4 md:gap-x-14 mt-10 pt-8 border-t border-white/10"
           >
@@ -216,8 +212,7 @@ export function Hero({
           </m.div>
         ) : trustLine ? (
           <m.p
-            initial={prefersReducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={show ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.4, delay: 0.55 }}
             className="font-sans text-sm text-white/70 mt-8"
           >
