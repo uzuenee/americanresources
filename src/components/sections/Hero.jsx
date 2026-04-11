@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { m, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -41,6 +42,7 @@ export function Hero({
 }) {
   const scrollY = useScrollPosition();
   const prefersReducedMotion = useReducedMotion();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const heightClass = {
     full: 'min-h-screen',
@@ -101,6 +103,22 @@ export function Hero({
           className="absolute inset-0 md:will-change-transform"
           style={prefersReducedMotion ? undefined : { transform: `translateY(${scrollY * 0.3}px)` }}
         >
+          {blurDataURL && (
+            <div
+              className={cn(
+                'absolute inset-0 z-[1] transition-opacity ease-out',
+                imageLoaded ? 'opacity-0 duration-700' : 'opacity-100'
+              )}
+              style={{
+                backgroundImage: `url(${blurDataURL})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: 'blur(20px)',
+                transform: 'scale(1.1)',
+              }}
+              aria-hidden="true"
+            />
+          )}
           <Image
             src={backgroundImage}
             alt=""
@@ -108,7 +126,7 @@ export function Hero({
             className="object-cover editorial-image"
             priority
             sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 1920px"
-            {...(blurDataURL && { placeholder: 'blur', blurDataURL })}
+            onLoad={() => setImageLoaded(true)}
           />
         </div>
       )}
