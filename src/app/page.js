@@ -11,6 +11,7 @@ export default function HomePage() {
       <Hero
         height="full"
         backgroundImage="/images/hero-home.jpeg"
+        blurDataURL="data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAJABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgME/8QAHhAAAgEDBQAAAAAAAAAAAAAAAQIAAxJRESExYYH/xAAVAQEBAAAAAAAAAAAAAAAAAAABAv/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AM4epaFqBWGG3kXAKFRboO4sQNx6ZJf/2Q=="
         eyebrow="ATLANTA'S TRUSTED RECYCLING PARTNER"
         title="Atlanta's Full-Service Industrial Recycling & Scrap Removal"
         subtitle="We collect metal, paper, electronics, and end-of-life equipment from your facility — on your schedule, fully documented."

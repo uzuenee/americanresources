@@ -34,6 +34,7 @@ export default async function ServiceDetailPage({ params }) {
       <Hero
         height="medium"
         backgroundImage={service.heroImage}
+        blurDataURL={service.heroBlurDataURL}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'Services', href: '/services' },

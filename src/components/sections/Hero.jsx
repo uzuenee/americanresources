@@ -31,6 +31,7 @@ export function Hero({
   subtitle,
   eyebrow,
   backgroundImage,
+  blurDataURL,
   height = 'full',
   breadcrumbs,
   buttons,
@@ -107,6 +108,7 @@ export function Hero({
             className="object-cover editorial-image"
             priority
             sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 1920px"
+            {...(blurDataURL && { placeholder: 'blur', blurDataURL })}
           />
         </div>
       )}

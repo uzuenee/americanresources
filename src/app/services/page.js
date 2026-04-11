@@ -14,6 +14,7 @@ export default function ServicesHubPage() {
       <Hero
         height="short"
         backgroundImage="/images/hero-services.jpeg"
+        blurDataURL="data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAJABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwAC/8QAHhAAAQMEAwAAAAAAAAAAAAAAAQACAwQRMnEhIlH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAv/EABcRAAMBAAAAAAAAAAAAAAAAAAABERL/2gAMAwEAAhEDEQA/AIVXFmxA6ckM9h2Y1pPpWIcENVlHtTpwQ//Z"
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'Services' },

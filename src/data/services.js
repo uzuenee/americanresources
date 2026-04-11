@@ -5,6 +5,7 @@ export const services = [
     shortTitle: 'Environmental Consulting',
     tagline: 'Strategic waste management consulting for sustainable operations',
     heroImage: '/images/services/environmental-consulting.jpeg',
+    heroBlurDataURL: 'data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAMABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgME/8QAHRAAAgICAwEAAAAAAAAAAAAAARECAwBBBBIhMf/EABQBAQAAAAAAAAAAAAAAAAAAAAH/xAAVEQEBAAAAAAAAAAAAAAAAAAABAP/aAAwDAQACEQMRAD8ANPIMb41FIAdmN5or5jvFAY0PNrDTMj1Bnay4I7GXWLA+rAZS/9k=',
     galleryImage: '/images/gallery/environmental-consulting.jpeg',
     description: [
       'Our Environmental Consulting service goes beyond basic waste audits. We partner with your organization to design, implement, and optimize comprehensive waste management and recycling programs tailored to your specific operations.',
@@ -40,6 +41,7 @@ export const services = [
     shortTitle: 'Paper Shredding',
     tagline: 'Secure, certified destruction of confidential documents',
     heroImage: '/images/services/paper-shredding.jpeg',
+    heroBlurDataURL: 'data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAJABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAID/8QAHhABAAICAQUAAAAAAAAAAAAAAQIEAAMRITIzcXL/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABYRAAMAAAAAAAAAAAAAAAAAAAABMf/aAAwDAQACEQMRAD8AHU2kdgSBgnHGXarmrYqLFOjzmFXyx9Y652R+cm6NQ//Z',
     galleryImage: '/images/gallery/paper-shredding.jpeg',
     description: [
       'Protect your business and your clients with our certified document destruction service. We provide secure, compliant shredding for offices, medical facilities, legal firms, and any organization handling sensitive information.',
@@ -75,6 +77,7 @@ export const services = [
     shortTitle: 'Scrap Metal',
     tagline: 'Turn your scrap into revenue with competitive metal recycling',
     heroImage: '/images/services/scrap-metal.jpeg',
+    heroBlurDataURL: 'data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAJABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAwT/xAAgEAABAwMFAQAAAAAAAAAAAAACAAERBBIxAyEyQUKB/8QAFAEBAAAAAAAAAAAAAAAAAAAAAv/EABURAQEAAAAAAAAAAAAAAAAAAAAx/9oADAMBAAIRAxEAPwCcKp7uI29Q0wkKoOGMRF9sOi8/EOplCk//2Q==',
     galleryImage: '/images/gallery/scrap-metal.jpeg',
     description: [
       'Your scrap metal has real value. We collect, sort, process, and recycle ferrous and non-ferrous metals from businesses and industrial sites across Atlanta, offering competitive pricing that turns waste into a revenue stream.',
@@ -110,6 +113,7 @@ export const services = [
     shortTitle: 'Electronics Recycling',
     tagline: 'Responsible e-waste disposal with certified data destruction',
     heroImage: '/images/services/electronics-recycling.jpeg',
+    heroBlurDataURL: 'data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAMABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAECA//EAB0QAAICAgMBAAAAAAAAAAAAAAECAAMRYRIhMVH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABcRAQADAAAAAAAAAAAAAAAAAAAREiH/2gAMAwEAAhEDEQA/AJey5WcryHwgQrstZ0L597JG5szFkwYnJwo2InEq/9k=',
     galleryImage: '/images/gallery/electronics-recycling.jpeg',
     description: [
       'Electronic waste contains both valuable recoverable materials and hazardous substances that demand responsible handling. Our electronics recycling service ensures your devices are processed safely, sustainably, and in full compliance with state and federal regulations.',
@@ -145,6 +149,7 @@ export const services = [
     shortTitle: 'Appliance Recycling',
     tagline: 'Safe, compliant recycling of household and industrial appliances',
     heroImage: '/images/services/appliance-recycling.jpeg',
+    heroBlurDataURL: 'data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAJABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAQIE/8QAIRAAAQMBCQAAAAAAAAAAAAAAAgABAxIRISIxMkFCUXH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AJISkpau+nkss0AM2E7X36TLrbxBZEoP/9k=',
     galleryImage: '/images/gallery/appliance-recycling.jpeg',
     description: [
       'Appliances contain a mix of valuable recyclable metals and hazardous materials that require careful, regulated handling. Our appliance recycling service ensures every unit is processed safely, with full compliance with environmental regulations.',
@@ -180,6 +185,7 @@ export const services = [
     shortTitle: 'Auto Recycling',
     tagline: 'Complete end-of-life vehicle processing and metal recovery',
     heroImage: '/images/services/auto-recycling.jpeg',
+    heroBlurDataURL: 'data:image/jpeg;base64,/9j/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAJABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAQP/xAAfEAABAwMFAAAAAAAAAAAAAAABAAIDBBFBFCFxcpH/xAAUAQEAAAAAAAAAAAAAAAAAAAAB/8QAFREBAQAAAAAAAAAAAAAAAAAAABH/2gAMAwEAAhEDEQA/AAVEltpH+o1UxFxKRyVHDuqnhEL/2Q==',
     galleryImage: '/images/gallery/auto-recycling.jpeg',
     description: [
       'When a vehicle reaches the end of its useful life, responsible recycling recovers valuable materials while preventing environmental contamination from hazardous fluids and components. Our automobile recycling service handles the entire process from tow to final recycling.',
