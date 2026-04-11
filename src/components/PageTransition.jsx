@@ -16,8 +16,8 @@ function FrozenRouter({ children }) {
 }
 
 const variants = {
-  hidden: { opacity: 0, y: 6 },
-  enter: { opacity: 1, y: 0 },
+  hidden: { opacity: 1 },
+  enter: { opacity: 1 },
   exit: { opacity: 0 },
 };
 
@@ -32,7 +32,7 @@ export function PageTransition({ children }) {
         initial="hidden"
         animate="enter"
         exit="exit"
-        transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+        transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
       >
         <FrozenRouter>{children}</FrozenRouter>
       </m.div>
