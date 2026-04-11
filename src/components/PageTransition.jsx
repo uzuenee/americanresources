@@ -38,7 +38,7 @@ export function PageTransition({ children }) {
           initial="hidden"
           animate="enter"
           exit="exit"
-          transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
+          transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
         >
           <FrozenRouter>{rest}</FrozenRouter>
         </m.div>
