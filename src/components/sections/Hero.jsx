@@ -47,17 +47,17 @@ export function Hero({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const heightClass = {
-    full: 'min-h-screen',
-    medium: 'min-h-[70vh]',
-    short: 'min-h-[60vh]',
-    shorter: 'min-h-[50vh]',
-    compact: 'min-h-[40vh]',
+    full: 'lg:min-h-[min(100vh,56.25vw)]',
+    medium: 'lg:min-h-[70vh]',
+    short: 'lg:min-h-[60vh]',
+    shorter: 'lg:min-h-[50vh]',
+    compact: 'lg:min-h-[40vh]',
   }[height];
 
   if (light) {
     return (
       <section className={cn(heightClass, 'relative flex items-end bg-offwhite pt-20')}>
-        <div key={pathname} className="mx-auto max-w-7xl px-6 lg:px-16 pb-16 md:pb-24 w-full">
+        <div key={pathname} className="mx-auto max-w-7xl px-6 lg:px-16 pb-8 md:pb-12 w-full">
           {breadcrumbs && (
             <nav aria-label="Breadcrumb" className="mb-4">
               <ol className="flex items-center gap-2 font-sans text-sm text-text-muted">
@@ -137,7 +137,7 @@ export function Hero({
       <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/95 via-navy-dark/60 to-navy-dark/40" />
 
       {/* Content — keyed on pathname so animations replay on every navigation */}
-      <div key={pathname} className="relative z-10 mx-auto max-w-7xl px-6 lg:px-16 pb-16 md:pb-24 lg:pb-32 w-full">
+      <div key={pathname} className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-16 pt-28 pb-10 md:pb-24 lg:pb-32 w-full">
         {breadcrumbs && (
           <nav aria-label="Breadcrumb" className="mb-6">
             <ol className="flex items-center gap-2 font-sans text-sm text-white/70">
@@ -169,7 +169,7 @@ export function Hero({
           initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.12, ease: MECHANICAL_EASE }}
-          className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6rem] font-bold uppercase text-white leading-[1.02] tracking-[-0.03em] max-w-4xl"
+          className="font-serif text-[clamp(2rem,9vw,3rem)] md:text-7xl lg:text-[5.5rem] xl:text-[6rem] font-bold uppercase text-white leading-[1.02] tracking-[-0.03em] max-w-4xl"
         >
           {title}
         </m.h1>
@@ -179,7 +179,7 @@ export function Hero({
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.28, ease: MECHANICAL_EASE }}
-            className="font-sans text-lg md:text-xl text-text-on-dark/80 leading-relaxed mt-6 max-w-[600px] font-light"
+            className="font-sans text-lg md:text-xl text-text-on-dark/80 leading-relaxed mt-6 max-w-[37.5rem] font-light"
           >
             {subtitle}
           </m.p>

@@ -69,7 +69,7 @@ export function ContactForm() {
   const inputClasses =
     'w-full font-sans text-base bg-white border border-border rounded-lg px-4 py-3.5 text-text-primary placeholder:text-text-muted/40 focus:outline-none focus:border-navy-light focus:ring-2 focus:ring-navy-light/20 transition-colors';
 
-  const errorClasses = 'font-sans text-[13px] text-danger mt-1.5';
+  const errorClasses = 'font-sans text-[0.8125rem] text-danger mt-1.5';
 
   return (
     <AnimatePresence mode="wait">

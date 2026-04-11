@@ -55,7 +55,7 @@ export function ProcessSteps({ steps = defaultSteps }) {
                 <h3 className="font-serif text-2xl text-text-primary mt-2">
                   {step.title}
                 </h3>
-                <p className="font-sans text-base text-text-muted leading-relaxed mt-3 max-w-[260px] mx-auto lg:mx-0">
+                <p className="font-sans text-base text-text-muted leading-relaxed mt-3 max-w-[16.25rem] mx-auto lg:mx-0">
                   {step.description}
                 </p>
               </div>

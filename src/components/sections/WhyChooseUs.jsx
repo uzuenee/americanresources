@@ -39,7 +39,7 @@ export function WhyChooseUs() {
         {/* Full-width header — no eyebrow, direct statement */}
         <div className="max-w-3xl mb-14 lg:mb-20">
           <AnimateOnScroll>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-[52px] text-text-primary leading-[1.08]">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-[3.25rem] text-text-primary leading-[1.08]">
               As committed to your success as we are to the planet
             </h2>
           </AnimateOnScroll>
@@ -54,7 +54,7 @@ export function WhyChooseUs() {
           {/* Left: image — placed first visually on desktop for asymmetry */}
           <div className="lg:col-span-5 relative order-2 lg:order-1">
             <AnimateOnScroll delay={0.15}>
-              <div className="relative h-[400px] lg:h-full min-h-[480px] rounded-2xl overflow-hidden">
+              <div className="relative h-[25rem] lg:h-full min-h-[30rem] rounded-2xl overflow-hidden">
                 <Image
                   src="/images/about/warehouse.jpeg"
                   alt="Recycling warehouse interior with workers sorting materials"

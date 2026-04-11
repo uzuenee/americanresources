@@ -33,13 +33,13 @@ function BlogCard({ post, index }) {
         )}>
           {post.category}
         </span>
-        <h3 className="font-serif text-xl md:text-[22px] text-text-primary leading-tight line-clamp-2">
+        <h3 className="font-serif text-xl md:text-[1.375rem] text-text-primary leading-tight line-clamp-2">
           {post.title}
         </h3>
-        <p className="font-sans text-[15px] text-text-muted leading-relaxed mt-2 line-clamp-2">
+        <p className="font-sans text-[0.9375rem] text-text-muted leading-relaxed mt-2 line-clamp-2">
           {post.excerpt}
         </p>
-        <p className="font-sans text-[13px] text-text-muted mt-3">
+        <p className="font-sans text-[0.8125rem] text-text-muted mt-3">
           {post.date} &middot; {post.readTime}
         </p>
       </article>

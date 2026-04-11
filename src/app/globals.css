@@ -34,6 +34,20 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Scale entire site proportionally with viewport width */
+@media (min-width: 1024px) {
+  html {
+    font-size: clamp(1rem, 0.5rem + 0.625vw, 1.125rem);
+  }
+}
+
+/* Wide viewports: restore original scaling for ultrawide */
+@media (min-width: 1800px) {
+  html {
+    font-size: max(1.125rem, calc(100vw / 120));
+  }
+}
+
 /* Reduced motion: disable smooth scroll, parallax, decorative animations */
 @media (prefers-reduced-motion: reduce) {
   html {

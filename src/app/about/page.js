@@ -37,7 +37,7 @@ export default function AboutPage() {
   return (
     <>
       <Hero
-        height="shorter"
+        height="compact"
         light
         breadcrumbs={[
           { label: 'Home', href: '/' },
@@ -53,7 +53,7 @@ export default function AboutPage() {
           <div className="lg:col-span-7">
             <Eyebrow>OUR STORY</Eyebrow>
             <AnimateOnScroll>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-[44px] text-text-primary leading-[1.15] mt-4 mb-8">
+              <h2 className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] text-text-primary leading-[1.15] mt-4 mb-8">
                 More Than a Recycling Company
               </h2>
             </AnimateOnScroll>
@@ -75,7 +75,7 @@ export default function AboutPage() {
           </div>
           <div className="lg:col-span-5">
             <AnimateOnScroll delay={0.2}>
-              <div className="relative h-[400px] lg:h-full min-h-[500px] rounded-2xl overflow-hidden">
+              <div className="relative h-[25rem] lg:h-full min-h-[31.25rem] rounded-2xl overflow-hidden">
                 <Image
                   src="/images/about/building.jpeg"
                   alt="American Resources facility exterior"
@@ -106,10 +106,10 @@ export default function AboutPage() {
                 <span className="font-serif italic text-6xl text-white/10 leading-none">
                   {value.number}
                 </span>
-                <h3 className="font-serif text-2xl md:text-[28px] text-white mt-2 mb-3">
+                <h3 className="font-serif text-2xl md:text-[1.75rem] text-white mt-2 mb-3">
                   {value.title}
                 </h3>
-                <p className="font-sans text-base text-white/70 leading-relaxed max-w-[360px] mx-auto md:mx-0">
+                <p className="font-sans text-base text-white/70 leading-relaxed max-w-[22.5rem] mx-auto md:mx-0">
                   {value.description}
                 </p>
               </div>

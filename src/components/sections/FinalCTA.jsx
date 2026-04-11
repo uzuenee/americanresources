@@ -19,12 +19,12 @@ export function FinalCTA({
           <div className="lg:col-span-8">
             <AnimateOnScroll>
               <div className="w-16 h-1 bg-copper mb-10" aria-hidden="true" />
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-[56px] text-white leading-[1.1] whitespace-pre-line">
+              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-[3.5rem] text-white leading-[1.1] whitespace-pre-line">
                 {headline}
               </h2>
             </AnimateOnScroll>
             <AnimateOnScroll delay={0.1}>
-              <p className="font-sans text-lg md:text-xl text-white/60 leading-relaxed mt-6 max-w-[540px]">
+              <p className="font-sans text-lg md:text-xl text-white/60 leading-relaxed mt-6 max-w-[33.75rem]">
                 {subtitle}
               </p>
             </AnimateOnScroll>
@@ -53,7 +53,7 @@ export function FinalCTA({
 
           {/* Right: decorative large number — adds asymmetric visual weight */}
           <div className="hidden lg:block lg:col-span-4 text-right" aria-hidden="true">
-            <span className="font-mono text-[160px] xl:text-[200px] leading-none text-copper/[0.06] select-none">
+            <span className="font-mono text-[10rem] xl:text-[12.5rem] leading-none text-copper/[0.06] select-none">
               20+
             </span>
           </div>

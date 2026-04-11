@@ -100,7 +100,7 @@ export function Navbar() {
                     aria-expanded={dropdownOpen}
                     aria-haspopup="true"
                     className={cn(
-                      'font-sans text-[15px] font-medium transition-colors duration-200 flex items-center gap-1 cursor-pointer',
+                      'font-sans text-[0.9375rem] font-medium transition-colors duration-200 flex items-center gap-1 cursor-pointer',
                       useDarkText
                         ? isActive(link.href) ? 'text-copper' : 'text-text-primary hover:text-copper'
                         : isActive(link.href) ? 'text-copper' : 'text-white hover:text-navy-pale'
@@ -115,7 +115,7 @@ export function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      'font-sans text-[15px] font-medium transition-colors duration-200',
+                      'font-sans text-[0.9375rem] font-medium transition-colors duration-200',
                       useDarkText
                         ? isActive(link.href) ? 'text-copper' : 'text-text-primary hover:text-copper'
                         : isActive(link.href) ? 'text-copper' : 'text-white hover:text-navy-pale'
@@ -128,7 +128,7 @@ export function Navbar() {
                 {/* Dropdown */}
                 {link.dropdown && dropdownOpen && (
                   <div className="absolute top-full left-0 pt-2" role="menu">
-                    <div className="bg-white rounded-xl shadow-xl border border-border py-3 px-2 min-w-[260px]">
+                    <div className="bg-white rounded-xl shadow-xl border border-border py-3 px-2 min-w-[16.25rem]">
                       {link.dropdown.map((item) => (
                         <Link
                           key={item.href}

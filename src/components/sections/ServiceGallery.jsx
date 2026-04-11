@@ -56,7 +56,7 @@ export function ServiceGallery() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden flex items-center"
+      className="relative lg:h-[min(100vh,56.25vw)] overflow-hidden flex items-center"
       aria-label="Our services"
     >
       {/* ── Fullscreen background images ── */}
@@ -95,7 +95,7 @@ export function ServiceGallery() {
       <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/70 via-transparent to-navy-dark/40" />
 
       {/* ── Content ── */}
-      <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-16 w-full py-28 lg:py-36">
+      <div className="relative z-10 mx-auto max-w-[87.5rem] px-6 lg:px-16 w-full py-28 lg:py-36">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
           {/* ── Left: Heading + Service list (always visible) ── */}
@@ -120,7 +120,7 @@ export function ServiceGallery() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.08, ease: mechanicalEase }}
-              className="font-serif text-3xl md:text-4xl lg:text-[44px] text-white leading-[1.08] mb-10"
+              className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] text-white leading-[1.08] mb-10"
             >
               Six Solutions, One Partner
             </m.h2>
@@ -148,7 +148,7 @@ export function ServiceGallery() {
                     onClick={() => selectService(i)}
                     onFocus={() => selectService(i)}
                     className={cn(
-                      'w-full flex items-center justify-between py-3.5 md:py-4 border-b text-left transition-all duration-300 group min-h-[48px]',
+                      'w-full flex items-center justify-between py-3.5 md:py-4 border-b text-left transition-all duration-300 group min-h-[3rem]',
                       activeIndex === i
                         ? 'border-copper/50 opacity-100'
                         : 'border-white/8 opacity-40 hover:opacity-70'
@@ -157,7 +157,7 @@ export function ServiceGallery() {
                     <div className="flex items-baseline gap-3.5">
                       <span
                         className={cn(
-                          'font-mono text-[11px] tabular-nums transition-colors duration-300',
+                          'font-mono text-[0.6875rem] tabular-nums transition-colors duration-300',
                           activeIndex === i ? 'text-copper' : 'text-white/20'
                         )}
                       >

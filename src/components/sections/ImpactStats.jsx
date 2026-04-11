@@ -16,7 +16,7 @@ function ImpactStat({ value, prefix = '', suffix = '', label, decimals = 0 }) {
       <div className="font-serif text-5xl md:text-6xl lg:text-7xl text-white tracking-tight">
         {prefix}{display}{suffix}
       </div>
-      <p className="font-sans text-base text-white/60 mt-3 max-w-[280px] mx-auto leading-relaxed">
+      <p className="font-sans text-base text-white/60 mt-3 max-w-[17.5rem] mx-auto leading-relaxed">
         {label}
       </p>
     </div>

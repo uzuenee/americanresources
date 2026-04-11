@@ -39,7 +39,7 @@ function BlogCard({ post, featured = false }) {
       <h3
         className={cn(
           'font-serif text-text-primary leading-tight line-clamp-2',
-          featured ? 'text-2xl md:text-3xl' : 'text-xl md:text-[22px]'
+          featured ? 'text-2xl md:text-3xl' : 'text-xl md:text-[1.375rem]'
         )}
       >
         {post.title}
@@ -47,12 +47,12 @@ function BlogCard({ post, featured = false }) {
       <p
         className={cn(
           'font-sans text-text-muted leading-relaxed mt-2 line-clamp-2',
-          featured ? 'text-base md:text-lg' : 'text-[15px]'
+          featured ? 'text-base md:text-lg' : 'text-[0.9375rem]'
         )}
       >
         {post.excerpt}
       </p>
-      <p className="font-sans text-[13px] text-text-muted mt-3">
+      <p className="font-sans text-[0.8125rem] text-text-muted mt-3">
         {post.date} &middot; {post.readTime}
       </p>
     </article>

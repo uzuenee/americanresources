@@ -67,7 +67,7 @@ export default async function ServiceDetailPage({ params }) {
           </div>
           <div className="lg:col-span-5">
             <AnimateOnScroll delay={0.2}>
-              <div className="relative h-[300px] lg:h-full min-h-[400px] rounded-2xl overflow-hidden">
+              <div className="relative h-[18.75rem] lg:h-full min-h-[25rem] rounded-2xl overflow-hidden">
                 <Image
                   src={service.galleryImage}
                   alt={service.title}
