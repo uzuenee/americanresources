@@ -30,7 +30,7 @@ export default function ContactPage() {
       />
 
       {/* Contact Split */}
-      <section className="bg-offwhite py-16 md:py-24 lg:py-32">
+      <section className="bg-offwhite pb-16 md:pb-24 lg:pb-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             {/* Form */}

@@ -48,7 +48,7 @@ export default function AboutPage() {
       />
 
       {/* Our Story */}
-      <SectionWrapper>
+      <SectionWrapper innerClassName="pt-0 md:pt-0 lg:pt-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-7">
             <Eyebrow>OUR STORY</Eyebrow>
@@ -132,7 +132,7 @@ export default function AboutPage() {
       </section>
 
       {/* Service Area */}
-      <SectionWrapper>
+      <SectionWrapper innerClassName="pt-0 md:pt-0 lg:pt-0">
         <div className="max-w-3xl mx-auto text-center">
           <Eyebrow center>SERVICE AREA</Eyebrow>
           <AnimateOnScroll>

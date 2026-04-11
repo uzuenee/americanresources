@@ -97,7 +97,7 @@ export default function BlogListingPage() {
       </section>
 
       {/* Article grid */}
-      <section className="bg-offwhite py-12 md:py-16">
+      <section className="bg-offwhite pb-12 md:pb-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {filtered.map((post, i) => (

@@ -23,9 +23,9 @@
   --color-success: #059669;
   --color-danger: #DC2626;
 
-  --font-serif: "Instrument Serif", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-serif: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "Inter", system-ui, sans-serif;
 
   --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -113,3 +113,4 @@ body {
   background-color: var(--color-copper-light);
   color: var(--color-navy-dark);
 }
+

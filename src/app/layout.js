@@ -1,26 +1,20 @@
-import { Instrument_Serif, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Barlow_Condensed, Inter } from 'next/font/google';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { MotionProvider } from '@/components/MotionProvider';
+import { PageTransition } from '@/components/PageTransition';
 import './globals.css';
 
-const instrumentSerif = Instrument_Serif({
-  weight: '400',
-  style: ['normal', 'italic'],
+const barlowCondensed = Barlow_Condensed({
+  weight: ['400', '600', '700'],
   subsets: ['latin'],
   variable: '--font-serif',
   display: 'swap',
 });
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
   display: 'swap',
 });
 
@@ -75,7 +69,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} antialiased`}
+      className={`${barlowCondensed.variable} ${inter.variable} antialiased`}
     >
       <head>
         <script
@@ -89,7 +83,9 @@ export default function RootLayout({ children }) {
         </a>
         <MotionProvider>
           <Navbar />
-          <main id="main-content">{children}</main>
+          <main id="main-content">
+            <PageTransition>{children}</PageTransition>
+          </main>
           <Footer />
         </MotionProvider>
       </body>

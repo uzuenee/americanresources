@@ -23,7 +23,7 @@ export default function GuidesListingPage() {
         subtitle="In-depth guides to help your business navigate waste management, compliance, and sustainability."
       />
 
-      <section className="bg-offwhite py-12 md:py-20">
+      <section className="bg-offwhite pb-12 md:pb-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-16 space-y-8">
           {guides.map((guide, i) => (
             <AnimateOnScroll key={guide.slug} delay={i * 0.1}>

@@ -3,9 +3,12 @@ import { m, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { Eyebrow } from '@/components/ui/Eyebrow';
 import { useCounter } from '@/hooks/useCounter';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { cn } from '@/utils/cn';
+
+const MECHANICAL_EASE = [0.22, 0.9, 0.36, 1];
 
 function HeroStat({ value, suffix = '', label }) {
   const numericValue = parseFloat(String(value).replace(/[^0-9.]/g, ''));
@@ -13,10 +16,10 @@ function HeroStat({ value, suffix = '', label }) {
 
   return (
     <div ref={ref} role="group" aria-label={`${numericValue.toLocaleString()}${suffix} ${label}`}>
-      <div className="font-mono text-2xl md:text-3xl text-white tracking-tight" aria-hidden="true">
-        {count.toLocaleString()}<span className="text-white/50">{suffix}</span>
+      <div className="font-sans text-2xl md:text-3xl text-white tracking-tight tabular-nums font-semibold" aria-hidden="true">
+        {count.toLocaleString()}<span className="text-white/70">{suffix}</span>
       </div>
-      <div className="font-sans text-xs uppercase tracking-[0.08em] text-white/50 mt-1" aria-hidden="true">
+      <div className="font-sans text-xs uppercase tracking-[0.08em] text-white/70 mt-1" aria-hidden="true">
         {label}
       </div>
     </div>
@@ -69,8 +72,8 @@ export function Hero({
           <m.h1
             initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="font-serif text-4xl md:text-5xl lg:text-6xl text-text-primary leading-[1.1] tracking-[-0.01em] max-w-4xl"
+            transition={{ duration: 0.5, ease: MECHANICAL_EASE }}
+            className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold uppercase text-text-primary leading-[1.1] tracking-[-0.01em] max-w-4xl"
           >
             {title}
           </m.h1>
@@ -78,7 +81,7 @@ export function Hero({
             <m.p
               initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
+              transition={{ duration: 0.45, delay: 0.15, ease: MECHANICAL_EASE }}
               className="font-sans text-lg md:text-xl text-text-muted leading-relaxed mt-6 max-w-2xl"
             >
               {subtitle}
@@ -94,7 +97,7 @@ export function Hero({
       {/* Background image with parallax */}
       {backgroundImage && (
         <div
-          className="absolute inset-0 will-change-transform"
+          className="absolute inset-0 md:will-change-transform"
           style={prefersReducedMotion ? undefined : { transform: `translateY(${scrollY * 0.3}px)` }}
         >
           <Image
@@ -103,7 +106,7 @@ export function Hero({
             fill
             className="object-cover editorial-image"
             priority
-            sizes="100vw"
+            sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 1920px"
           />
         </div>
       )}
@@ -115,14 +118,14 @@ export function Hero({
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-16 pb-16 md:pb-24 lg:pb-32 w-full">
         {breadcrumbs && (
           <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-2 font-sans text-sm text-white/60">
+            <ol className="flex items-center gap-2 font-sans text-sm text-white/70">
               {breadcrumbs.map((crumb, i) => (
                 <li key={i} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">&rarr;</span>}
                   {crumb.href ? (
-                    <Link href={crumb.href} className="hover:text-white/80 transition-colors">{crumb.label}</Link>
+                    <Link href={crumb.href} className="hover:text-white transition-colors">{crumb.label}</Link>
                   ) : (
-                    <span className="text-white/70" aria-current="page">{crumb.label}</span>
+                    <span className="text-white/90" aria-current="page">{crumb.label}</span>
                   )}
                 </li>
               ))}
@@ -134,21 +137,17 @@ export function Hero({
           <m.div
             initial={prefersReducedMotion ? false : { opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="flex items-center gap-3 mb-6"
+            transition={{ duration: 0.4, ease: MECHANICAL_EASE }}
           >
-            <span className="block w-10 h-0.5 bg-navy-light" aria-hidden="true" />
-            <span className="font-sans text-sm font-medium uppercase tracking-[0.15em] text-navy-pale">
-              {eyebrow}
-            </span>
+            <Eyebrow dark immediate className="mb-6">{eyebrow}</Eyebrow>
           </m.div>
         )}
 
         <m.h1
           initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6rem] text-white leading-[1.02] tracking-[-0.03em] max-w-4xl"
+          transition={{ duration: 0.55, delay: 0.12, ease: MECHANICAL_EASE }}
+          className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6rem] font-bold uppercase text-white leading-[1.02] tracking-[-0.03em] max-w-4xl"
         >
           {title}
         </m.h1>
@@ -157,7 +156,7 @@ export function Hero({
           <m.p
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.45, delay: 0.28, ease: MECHANICAL_EASE }}
             className="font-sans text-lg md:text-xl text-text-on-dark/80 leading-relaxed mt-6 max-w-[600px] font-light"
           >
             {subtitle}
@@ -168,7 +167,7 @@ export function Hero({
           <m.div
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.7, ease: 'easeOut' }}
+            transition={{ duration: 0.4, delay: 0.42, ease: MECHANICAL_EASE }}
             className="flex flex-wrap gap-4 mt-10"
           >
             {buttons.map((btn, i) => (
@@ -188,7 +187,7 @@ export function Hero({
           <m.div
             initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 1 }}
+            transition={{ duration: 0.4, delay: 0.55 }}
             className="flex flex-wrap gap-x-10 gap-y-4 md:gap-x-14 mt-10 pt-8 border-t border-white/10"
           >
             {stats.map((stat, i) => (
@@ -199,8 +198,8 @@ export function Hero({
           <m.p
             initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 1 }}
-            className="font-sans text-sm text-white/60 mt-8"
+            transition={{ duration: 0.4, delay: 0.55 }}
+            className="font-sans text-sm text-white/70 mt-8"
           >
             {trustLine}
           </m.p>

@@ -12,17 +12,12 @@ export default function HomePage() {
         height="full"
         backgroundImage="/images/hero-home.jpeg"
         eyebrow="ATLANTA'S TRUSTED RECYCLING PARTNER"
-        title={<>Waste Into<br />Opportunity</>}
-        subtitle="American Resources partners with Atlanta businesses to turn manufacturing waste, scrap metal, and end-of-life equipment into sustainable value."
+        title="Atlanta's Full-Service Industrial Recycling & Scrap Removal"
+        subtitle="We collect metal, paper, electronics, and end-of-life equipment from your facility — on your schedule, fully documented."
         buttons={[
-          { label: 'Request a Consultation', variant: 'primary', href: '/contact', arrow: true },
-          { label: 'Explore Our Services', variant: 'secondary', href: '/services' },
+          { label: 'Book a Free Site Assessment', variant: 'primary', href: '/contact', arrow: true },
         ]}
-        stats={[
-          { value: 20, suffix: '+', label: 'Years Experience' },
-          { value: 200, suffix: '+', label: 'Business Partners' },
-          { value: 15000, suffix: '+', label: 'Tons Recycled Annually' },
-        ]}
+        trustLine="Serving 200+ Atlanta businesses for over 20 years · 15,000+ tons recycled annually"
       />
       <Testimonials />
       <ServiceGallery />
