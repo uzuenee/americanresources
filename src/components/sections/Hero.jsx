@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { m, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -40,12 +41,10 @@ export function Hero({
   stats,
   light = false,
 }) {
+  const pathname = usePathname();
   const scrollY = useScrollPosition();
   const prefersReducedMotion = useReducedMotion();
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  const show = mounted || prefersReducedMotion;
 
   const heightClass = {
     full: 'min-h-screen',
@@ -58,7 +57,7 @@ export function Hero({
   if (light) {
     return (
       <section className={cn(heightClass, 'relative flex items-end bg-offwhite pt-20')}>
-        <div className="mx-auto max-w-7xl px-6 lg:px-16 pb-16 md:pb-24 w-full">
+        <div key={pathname} className="mx-auto max-w-7xl px-6 lg:px-16 pb-16 md:pb-24 w-full">
           {breadcrumbs && (
             <nav aria-label="Breadcrumb" className="mb-4">
               <ol className="flex items-center gap-2 font-sans text-sm text-text-muted">
@@ -76,7 +75,8 @@ export function Hero({
             </nav>
           )}
           <m.h1
-            animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: MECHANICAL_EASE }}
             className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold uppercase text-text-primary leading-[1.1] tracking-[-0.01em] max-w-4xl"
           >
@@ -84,7 +84,8 @@ export function Hero({
           </m.h1>
           {subtitle && (
             <m.p
-              animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.15, ease: MECHANICAL_EASE }}
               className="font-sans text-lg md:text-xl text-text-muted leading-relaxed mt-6 max-w-2xl"
             >
@@ -98,7 +99,7 @@ export function Hero({
 
   return (
     <section className={cn(heightClass, 'relative flex items-end overflow-hidden')}>
-      {/* Background image with parallax */}
+      {/* Background image with parallax — NOT keyed, stays in place across navigations */}
       {backgroundImage && (
         <div
           className="absolute inset-0 md:will-change-transform"
@@ -135,8 +136,8 @@ export function Hero({
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/95 via-navy-dark/60 to-navy-dark/40" />
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-16 pb-16 md:pb-24 lg:pb-32 w-full">
+      {/* Content — keyed on pathname so animations replay on every navigation */}
+      <div key={pathname} className="relative z-10 mx-auto max-w-7xl px-6 lg:px-16 pb-16 md:pb-24 lg:pb-32 w-full">
         {breadcrumbs && (
           <nav aria-label="Breadcrumb" className="mb-6">
             <ol className="flex items-center gap-2 font-sans text-sm text-white/70">
@@ -156,7 +157,8 @@ export function Hero({
 
         {eyebrow && (
           <m.div
-            animate={show ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: MECHANICAL_EASE }}
           >
             <Eyebrow dark immediate className="mb-6">{eyebrow}</Eyebrow>
@@ -164,7 +166,8 @@ export function Hero({
         )}
 
         <m.h1
-          animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.12, ease: MECHANICAL_EASE }}
           className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6rem] font-bold uppercase text-white leading-[1.02] tracking-[-0.03em] max-w-4xl"
         >
@@ -173,7 +176,8 @@ export function Hero({
 
         {subtitle && (
           <m.p
-            animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.28, ease: MECHANICAL_EASE }}
             className="font-sans text-lg md:text-xl text-text-on-dark/80 leading-relaxed mt-6 max-w-[600px] font-light"
           >
@@ -183,7 +187,8 @@ export function Hero({
 
         {buttons && (
           <m.div
-            animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.42, ease: MECHANICAL_EASE }}
             className="flex flex-wrap gap-4 mt-10"
           >
@@ -202,7 +207,8 @@ export function Hero({
 
         {stats ? (
           <m.div
-            animate={show ? { opacity: 1 } : { opacity: 0 }}
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.55 }}
             className="flex flex-wrap gap-x-10 gap-y-4 md:gap-x-14 mt-10 pt-8 border-t border-white/10"
           >
@@ -212,7 +218,8 @@ export function Hero({
           </m.div>
         ) : trustLine ? (
           <m.p
-            animate={show ? { opacity: 1 } : { opacity: 0 }}
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.55 }}
             className="font-sans text-sm text-white/70 mt-8"
           >
