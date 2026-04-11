@@ -42,7 +42,7 @@ export function ImpactStats() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           <ImpactStat value={15000} suffix="+" label="Tons of Material Diverted from Landfills Annually" />
           <ImpactStat value={850} suffix="+" label="Tons of CO&#x2082; Emissions Prevented" />
-          <ImpactStat value={2.1} prefix="$" suffix="M+" label="Recovered Value Returned to Atlanta Businesses" decimals={1} />
+          <ImpactStat value={200} suffix="+" label="Atlanta Businesses Advancing Their Sustainability Goals" />
         </div>
 
         {/* Quote */}

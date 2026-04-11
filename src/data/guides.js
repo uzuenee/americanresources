@@ -17,9 +17,9 @@ export const guides = [
   },
   {
     slug: 'scrap-metal-recycling-maximizing-value',
-    title: 'Maximizing Value from Scrap Metal: An Industrial Guide',
+    title: 'Maximizing Recovery from Scrap Metal: An Industrial Guide',
     description:
-      'Learn how to sort, prepare, and sell scrap metal for the best prices. Covers ferrous and non-ferrous metals, market trends, and building a relationship with your recycling partner.',
+      'Learn how to sort, prepare, and responsibly recycle scrap metal. Covers ferrous and non-ferrous metals, best practices for circularity, and building a lasting relationship with your recycling partner.',
     image: '/images/services/scrap-metal.jpeg',
     readTime: '18 min read',
   },

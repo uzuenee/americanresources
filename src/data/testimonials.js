@@ -1,7 +1,7 @@
 export const testimonials = [
   {
     quote:
-      'American Resources completely transformed how we handle waste at our facilities. What used to be a headache is now a revenue stream.',
+      'American Resources completely transformed how we handle waste at our facilities. What used to be a headache is now a cornerstone of our sustainability program.',
     name: 'Sarah Mitchell',
     title: 'Operations Director',
     company: 'Peachtree Manufacturing',

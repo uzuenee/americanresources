@@ -13,7 +13,7 @@ const defaultSteps = [
     number: '02',
     title: 'Custom Plan',
     description:
-      'Receive a detailed proposal with service recommendations, scheduling, pricing, and projected recovery value.',
+      'Receive a detailed proposal with service recommendations, scheduling, pricing, and projected environmental impact.',
   },
   {
     number: '03',
@@ -25,7 +25,7 @@ const defaultSteps = [
     number: '04',
     title: 'Reporting & Optimization',
     description:
-      'Track your environmental impact with regular reports. We continuously optimize to maximize value and minimize waste.',
+      'Track your environmental impact with regular reports. We continuously optimize to maximize material recovery and minimize waste.',
   },
 ];
 

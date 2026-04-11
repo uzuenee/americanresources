@@ -69,7 +69,7 @@ export default function AboutPage() {
             </AnimateOnScroll>
             <AnimateOnScroll delay={0.2}>
               <p className="font-sans text-base md:text-lg text-text-muted leading-relaxed">
-                Our approach is different. We don&apos;t just haul your waste away. We analyze your waste streams, design custom recycling programs, ensure regulatory compliance, and maximize the recovery value of your materials. We&apos;re a partner in your sustainability strategy, not just a vendor on your invoice.
+                Our approach is different. We don&apos;t just haul your waste away. We analyze your waste streams, design custom recycling programs, ensure regulatory compliance, and recover as much material as possible from every pound of waste. We&apos;re a partner in your sustainability strategy, not just a vendor on your invoice.
               </p>
             </AnimateOnScroll>
           </div>

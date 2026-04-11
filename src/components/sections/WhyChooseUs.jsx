@@ -23,9 +23,9 @@ const differentiators = [
   },
   {
     number: '04',
-    title: 'Revenue Recovery',
+    title: 'Environmental Stewardship',
     description:
-      'Your scrap metal and recyclables have value. We ensure you receive competitive pricing, turning waste disposal from a cost into a revenue stream.',
+      'Every ton we process is diverted from the landfill and returned to the supply chain. We document tons diverted and CO₂ prevented, giving you real numbers to back your ESG and sustainability reporting.',
   },
 ];
 

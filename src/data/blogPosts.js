@@ -33,7 +33,7 @@ export const blogPosts = [
     slug: 'scrap-metal-pricing-guide',
     title: 'Understanding Scrap Metal Pricing: A Business Owner\'s Guide',
     excerpt:
-      'Learn how scrap metal prices are determined and how to maximize the value of your recyclable metals.',
+      'A clear look at how scrap metal prices are determined, what drives market rates, and what fair, transparent partnership looks like.',
     category: 'GUIDE',
     image: '/images/blog/scrap-weighing.jpeg',
     date: 'December 2024',

@@ -50,7 +50,7 @@ export const faqCategories = [
       },
       {
         q: 'Do you pay for scrap materials?',
-        a: 'Yes. For scrap metals and certain other recyclable materials, we offer competitive pricing. Your waste can become a revenue stream rather than a cost center.',
+        a: 'Yes. For scrap metals and certain other recyclable materials, we offer fair, transparent pricing based on current commodity rates and certified weighing.',
       },
       {
         q: 'How do I schedule a pickup?',
@@ -79,7 +79,7 @@ export const faqCategories = [
       },
       {
         q: 'Can you help with ESG reporting?',
-        a: 'Yes. We provide regular impact reports tracking tons diverted, CO₂ prevented, and recovery value — data you can use directly in your ESG and sustainability reporting.',
+        a: 'Yes. We provide regular impact reports tracking tons diverted, CO₂ prevented, and materials returned to the supply chain — data you can use directly in your ESG and sustainability reporting.',
       },
     ],
   },

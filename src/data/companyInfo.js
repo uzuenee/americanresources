@@ -23,7 +23,6 @@ export const companyInfo = {
     tonsRecycled: '15,000+',
     services: '6',
     retention: '98%',
-    recoveredValue: '$2.1M+',
     co2Prevented: '850+',
   },
 };
