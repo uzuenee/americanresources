@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://americanresources.com
+
+# Sitemaps
+Sitemap: https://americanresources.com/sitemap.xml

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" fill="none">
+  <!-- Eagle head silhouette -->
+  <g transform="translate(5, 5)">
+    <!-- Recycling arrows circle -->
+    <g fill="#C62828">
+      <path d="M35 5 L45 20 L25 20 Z" opacity="0.9"/>
+      <path d="M55 45 L60 30 L50 35 L55 25 L65 35 Z" opacity="0.9"/>
+      <path d="M15 45 L10 30 L20 35 L15 25 L5 35 Z" opacity="0.9" transform="scale(-1,1) translate(-70,0)"/>
+      <path d="M20 55 C20 55 25 60 35 60 C45 60 50 55 50 55 L45 50 C45 50 42 53 35 53 C28 53 25 50 25 50 Z" opacity="0.9"/>
+    </g>
+    <!-- Eagle -->
+    <g fill="#1B2A4A">
+      <path d="M35 12 C30 12 22 18 22 28 C22 32 24 36 27 38 C30 40 33 40 35 38 C33 36 30 33 30 28 C30 22 33 18 35 16 C37 18 40 22 40 28 C40 33 37 36 35 38 C37 40 40 40 43 38 C46 36 48 32 48 28 C48 18 40 12 35 12Z"/>
+      <path d="M28 25 C26 25 24 27 25 29 C25 30 27 30 28 29 C29 28 29 26 28 25Z"/>
+      <path d="M35 38 L33 45 L35 43 L37 45 Z"/>
+    </g>
+  </g>
+  <!-- Company name -->
+  <text x="80" y="38" font-family="Georgia, serif" font-weight="700" font-size="28" fill="#1B2A4A" letter-spacing="0.05em">AMERICAN</text>
+  <text x="270" y="38" font-family="Georgia, serif" font-weight="700" font-size="28" fill="#C62828" letter-spacing="0.05em">RESOURCES</text>
+  <!-- Tagline -->
+  <text x="80" y="58" font-family="Arial, sans-serif" font-weight="400" font-size="9" fill="#C62828" letter-spacing="0.15em">METAL, PAPER, ELECTRONICS AND PLASTIC RECYCLING</text>
+</svg>
