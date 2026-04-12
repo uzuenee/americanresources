@@ -4,7 +4,7 @@ import { AnimateOnScroll } from '@/components/ui/AnimateOnScroll';
 import { guides } from '@/data/guides';
 
 export const metadata = {
-  title: 'Recycling Guides',
+  title: 'Blog',
   description:
     "In-depth guides to help your business navigate waste management, compliance, and sustainability in the Atlanta metro area.",
 };
@@ -17,10 +17,10 @@ export default function GuidesListingPage() {
         light
         breadcrumbs={[
           { label: 'Home', href: '/' },
-          { label: 'Guides' },
+          { label: 'Blog' },
         ]}
-        title="Recycling Guides"
-        subtitle="In-depth guides to help your business navigate waste management, compliance, and sustainability."
+        title="Recycling Resources"
+        subtitle="In-depth articles to help your business navigate waste management, compliance, and sustainability."
       />
 
       <section className="bg-offwhite pb-12 md:pb-20">

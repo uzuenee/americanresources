@@ -4,7 +4,7 @@ export const blogPosts = [
     title: 'How to Set Up a Corporate Recycling Program in 5 Steps',
     excerpt:
       'A practical roadmap for operations managers looking to implement or overhaul their company recycling program.',
-    category: 'GUIDE',
+    category: 'HOW-TO',
     image: '/images/blog/office-recycling.jpeg',
     date: 'March 2025',
     readTime: '8 min read',
@@ -34,7 +34,7 @@ export const blogPosts = [
     title: 'Understanding Scrap Metal Pricing: A Business Owner\'s Guide',
     excerpt:
       'A clear look at how scrap metal prices are determined, what drives market rates, and what fair, transparent partnership looks like.',
-    category: 'GUIDE',
+    category: 'HOW-TO',
     image: '/images/blog/scrap-weighing.jpeg',
     date: 'December 2024',
     readTime: '7 min read',
@@ -44,7 +44,7 @@ export const blogPosts = [
     title: 'Data Destruction Best Practices for Enterprise Security',
     excerpt:
       'Why proper document and electronics destruction is critical for protecting your business from data breaches.',
-    category: 'GUIDE',
+    category: 'HOW-TO',
     image: '/images/services/paper-shredding.jpeg',
     date: 'November 2024',
     readTime: '6 min read',

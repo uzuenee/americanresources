@@ -53,8 +53,9 @@ export function Footer() {
             <h4 className="font-serif text-lg text-navy-pale mb-5">Resources</h4>
             <ul className="space-y-2.5">
               {[
-                { label: 'Blog', href: '/blog' },
+                { label: 'Customer Portal', href: '/login' },
                 { label: 'Guides', href: '/guides' },
+                { label: 'Blog', href: '/blog' },
                 { label: 'FAQ', href: '/faq' },
                 { label: 'About', href: '/about' },
               ].map((link) => (

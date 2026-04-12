@@ -5,9 +5,15 @@ import { usePathname } from 'next/navigation';
 import { m, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import { companyInfo } from '@/data/companyInfo';
+import { useRouteTransition } from '@/components/RouteTransition';
+
+function isModifiedEvent(e) {
+  return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
+}
 
 export function MobileMenu({ isOpen, onClose, links }) {
   const pathname = usePathname();
+  const { transitionTo } = useRouteTransition();
 
   const isActive = (href) => {
     if (href === '/') return pathname === '/';
@@ -139,13 +145,27 @@ export function MobileMenu({ isOpen, onClose, links }) {
               >
                 {companyInfo.email}
               </a>
-              <Link
-                href="/contact"
-                onClick={onClose}
-                className="inline-block bg-accent text-white font-sans font-semibold px-8 py-3.5 rounded-lg hover:bg-accent-hover active:scale-[0.98] transition-all"
-              >
-                Get a Quote
-              </Link>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href="/contact"
+                  onClick={onClose}
+                  className="inline-block bg-accent text-white font-sans font-semibold px-8 py-3.5 rounded-lg hover:bg-accent-hover active:scale-[0.98] transition-all"
+                >
+                  Get a Quote
+                </Link>
+                <Link
+                  href="/login"
+                  onClick={(e) => {
+                    if (isModifiedEvent(e)) return;
+                    e.preventDefault();
+                    onClose();
+                    transitionTo('/login', 'forward');
+                  }}
+                  className="inline-block font-sans font-semibold text-white/80 hover:text-white transition-colors"
+                >
+                  Sign In &rarr;
+                </Link>
+              </div>
             </div>
           </div>
         </m.div>

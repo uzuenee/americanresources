@@ -7,12 +7,12 @@ import { blogPosts } from '@/data/blogPosts';
 import { cn } from '@/utils/cn';
 
 const categoryStyles = {
-  GUIDE: 'bg-navy-pale text-navy-light',
+  'HOW-TO': 'bg-navy-pale text-navy-light',
   'INDUSTRY NEWS': 'bg-accent-light text-accent',
   ATLANTA: 'bg-sage-light text-sage',
 };
 
-const categories = ['All', 'GUIDE', 'INDUSTRY NEWS', 'ATLANTA'];
+const categories = ['All', 'HOW-TO', 'INDUSTRY NEWS', 'ATLANTA'];
 
 function BlogCard({ post, index }) {
   return (
@@ -62,9 +62,9 @@ export default function BlogListingPage() {
         light
         breadcrumbs={[
           { label: 'Home', href: '/' },
-          { label: 'Blog' },
+          { label: 'Guides' },
         ]}
-        title="Insights & Resources"
+        title="Insights & Guides"
         subtitle="Expert guidance on recycling, sustainability regulations, and environmental best practices for Atlanta businesses."
       />
 

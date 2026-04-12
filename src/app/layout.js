@@ -1,8 +1,6 @@
 import { Barlow_Condensed, Inter } from 'next/font/google';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
 import { MotionProvider } from '@/components/MotionProvider';
-import { PageTransition } from '@/components/PageTransition';
+import { RouteTransitionProvider } from '@/components/RouteTransition';
 import './globals.css';
 
 const barlowCondensed = Barlow_Condensed({
@@ -82,11 +80,7 @@ export default function RootLayout({ children }) {
           Skip to main content
         </a>
         <MotionProvider>
-          <Navbar />
-          <main id="main-content">
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer />
+          <RouteTransitionProvider>{children}</RouteTransitionProvider>
         </MotionProvider>
       </body>
     </html>

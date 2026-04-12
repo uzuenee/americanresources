@@ -74,7 +74,7 @@ export function BlogPreview({ count = 3 }) {
             </h2>
           </AnimateOnScroll>
           <Link
-            href="/blog"
+            href="/guides"
             className="font-sans text-base text-accent hover:text-accent-hover hover:underline mt-4 md:mt-0 flex-shrink-0 group"
           >
             View All Articles{' '}

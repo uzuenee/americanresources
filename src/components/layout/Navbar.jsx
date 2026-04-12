@@ -7,7 +7,12 @@ import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { cn } from '@/utils/cn';
 import { services } from '@/data/services';
 import { companyInfo } from '@/data/companyInfo';
+import { useRouteTransition } from '@/components/RouteTransition';
 import { MobileMenu } from './MobileMenu';
+
+function isModifiedEvent(e) {
+  return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
+}
 
 const navLinks = [
   {
@@ -16,8 +21,8 @@ const navLinks = [
     dropdown: services.map((s) => ({ label: s.shortTitle, href: `/services/${s.slug}` })),
   },
   { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
   { label: 'Guides', href: '/guides' },
+  { label: 'Blog', href: '/blog' },
   { label: 'FAQ', href: '/faq' },
 ];
 
@@ -25,6 +30,7 @@ export function Navbar() {
   const scrollY = useScrollPosition();
   const isScrolled = scrollY > 50;
   const pathname = usePathname();
+  const { transitionTo } = useRouteTransition();
 
   // Pages with light hero backgrounds need dark nav text even before scroll
   const lightPages = ['/blog', '/guides', '/faq', '/contact', '/about'];
@@ -69,7 +75,10 @@ export function Navbar() {
               alt=""
               width={180}
               height={50}
-              className="h-10 md:h-12 w-auto transition-opacity duration-300"
+              className={cn(
+                'h-10 md:h-12 w-auto transition-[filter] duration-300',
+                !useDarkText && 'brightness-0 invert'
+              )}
               priority
             />
           </Link>
@@ -156,6 +165,22 @@ export function Navbar() {
             >
               {companyInfo.phone}
             </a>
+
+            {/* Sign In */}
+            <Link
+              href="/login"
+              onClick={(e) => {
+                if (isModifiedEvent(e)) return;
+                e.preventDefault();
+                transitionTo('/login', 'forward');
+              }}
+              className={cn(
+                'font-sans text-[0.9375rem] font-medium transition-colors duration-200',
+                useDarkText ? 'text-text-primary hover:text-copper' : 'text-white hover:text-navy-pale'
+              )}
+            >
+              Sign In
+            </Link>
 
             {/* CTA */}
             <Link
