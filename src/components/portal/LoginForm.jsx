@@ -1,12 +1,51 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { Suspense, useActionState, useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { FormField } from './FormField';
 import { EyeIcon, EyeOffIcon, ArrowRightIcon } from './icons';
 import { loginAction } from '@/app/actions/auth';
 
 const initialState = { error: null };
+
+const URL_NOTICES = {
+  reset_ok: { tone: 'success', text: 'Password updated. Sign in with your new one.' },
+  confirm_expired: {
+    tone: 'danger',
+    text: 'That confirmation link has expired. Sign up again to receive a fresh one.',
+  },
+  reset_expired: {
+    tone: 'danger',
+    text: 'That reset link has expired. Request a new one from the forgot-password page.',
+  },
+  invalid_link: {
+    tone: 'danger',
+    text: 'That link is not valid. Request a fresh one and try again.',
+  },
+};
+
+// Wrapped in <Suspense> below so useSearchParams() doesn't bail out CSR for
+// the whole page during static export.
+function UrlNotice() {
+  const params = useSearchParams();
+  const key =
+    params.get('reset') === 'ok' ? 'reset_ok' : params.get('error') || null;
+  const notice = key ? URL_NOTICES[key] : null;
+  if (!notice) return null;
+  return (
+    <p
+      role="status"
+      className={
+        notice.tone === 'success'
+          ? 'mt-6 rounded-sm border border-success/30 bg-success/5 px-3 py-2 font-sans text-[0.8125rem] text-success'
+          : 'mt-6 rounded-sm border border-danger/30 bg-danger/5 px-3 py-2 font-sans text-[0.8125rem] text-danger'
+      }
+    >
+      {notice.text}
+    </p>
+  );
+}
 
 export function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, initialState);
@@ -23,6 +62,10 @@ export function LoginForm() {
       <p className="mt-2 font-sans text-[0.9375rem] text-text-muted">
         Sign in to keep your loads moving.
       </p>
+
+      <Suspense fallback={null}>
+        <UrlNotice />
+      </Suspense>
 
       <form action={formAction} noValidate className="mt-8 space-y-5">
         <FormField
@@ -58,12 +101,12 @@ export function LoginForm() {
             )}
           </FormField>
           <div className="mt-1.5 flex justify-end">
-            <a
-              href="mailto:info@recyclinggroup.com?subject=Password%20reset%20request"
+            <Link
+              href="/forgot-password"
               className="font-sans text-[0.8125rem] text-navy-light hover:underline"
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
         </div>
 

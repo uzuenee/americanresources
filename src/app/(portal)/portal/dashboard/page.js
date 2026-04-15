@@ -4,7 +4,10 @@ import { CustomerDashboard } from '@/components/portal/pages/CustomerDashboard';
 
 export const metadata = { title: 'Dashboard' };
 
-export default async function CustomerDashboardPage() {
+export default async function CustomerDashboardPage({ searchParams }) {
+  const sp = (await searchParams) || {};
+  const showWelcome = sp.welcome === '1';
+
   const { customer, recentActivity } = await getCustomerPortalSession();
 
   const supabase = await createClient();
@@ -54,6 +57,7 @@ export default async function CustomerDashboardPage() {
       lastEntry={lastEntry}
       nextRequest={nextRequest}
       activity={recentActivity}
+      showWelcome={showWelcome}
     />
   );
 }

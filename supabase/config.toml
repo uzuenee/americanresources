@@ -30,4 +30,8 @@ enable_signup = true
 [auth.email]
 enable_signup = true
 double_confirm_changes = true
-enable_confirmations = false
+# We use admin.generateLink + Resend in src/app/actions/auth.js for delivery,
+# so Supabase's own mailer is bypassed entirely. We need confirmations enabled
+# so users start as confirmed=false and the token from generateLink is real.
+enable_confirmations = true
+mailer_autoconfirm = false

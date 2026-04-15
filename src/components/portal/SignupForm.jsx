@@ -2,9 +2,14 @@
 
 import { useActionState, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { FormField } from './FormField';
-import { EyeIcon, EyeOffIcon, ArrowRightIcon } from './icons';
+import { FormField, Select } from './FormField';
+import { EyeIcon, EyeOffIcon, ArrowRightIcon, MailIcon } from './icons';
 import { signupAction } from '@/app/actions/auth';
+import { cn } from '@/utils/cn';
+
+// Brand-token classes matching ResetPasswordForm so both strength meters share
+// the same visual language (copper → sage → success as score rises).
+const STRENGTH_BG = ['bg-copper-light', 'bg-copper', 'bg-sage', 'bg-success'];
 
 function scorePassword(password) {
   if (!password) return 0;
@@ -18,6 +23,14 @@ function scorePassword(password) {
 
 const STRENGTH_LABELS = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'];
 
+const US_STATES = [
+  'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL',
+  'GA','HI','ID','IL','IN','IA','KS','KY','LA','ME',
+  'MD','MA','MI','MN','MS','MO','MT','NE','NV','NH',
+  'NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI',
+  'SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY',
+];
+
 const initialState = { error: null, fieldErrors: {} };
 
 export function SignupForm() {
@@ -28,6 +41,7 @@ export function SignupForm() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [phone, setPhone] = useState('');
+  const [zip, setZip] = useState('');
 
   function formatPhone(value) {
     const digits = value.replace(/\D/g, '').slice(0, 10);
@@ -38,6 +52,30 @@ export function SignupForm() {
 
   const strength = useMemo(() => scorePassword(password), [password]);
   const fieldErrors = state?.fieldErrors ?? {};
+
+  if (state?.success) {
+    return (
+      <div className="flex flex-col items-center text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-navy/10">
+          <MailIcon className="h-7 w-7 text-navy" />
+        </div>
+        <h1 className="mt-6 font-serif text-[clamp(1.75rem,3vw,2.25rem)] font-semibold leading-[1.1] text-text-primary">
+          Check your email
+        </h1>
+        <p className="mt-3 max-w-sm font-sans text-[0.9375rem] leading-relaxed text-text-muted">
+          We&apos;ve sent a confirmation link to your email address. Click the
+          link to activate your account and get started.
+        </p>
+        <Link
+          href="/login"
+          className="mt-8 inline-flex items-center gap-2 font-sans text-[0.9375rem] font-semibold text-navy-light transition-colors hover:underline"
+        >
+          Go to sign in
+          <ArrowRightIcon className="h-4 w-4" />
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -90,7 +128,66 @@ export function SignupForm() {
             />
           )}
         </FormField>
-        <div>
+
+        {/* ── Pickup address ── */}
+        <fieldset className="space-y-4 border-t border-border/50 pt-5">
+          <legend className="font-sans text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-copper">
+            Pickup address
+          </legend>
+
+          <FormField
+            label="Address"
+            name="pickupAddress"
+            autoComplete="address-line1"
+            placeholder="123 Industrial Blvd"
+            required
+            error={fieldErrors.pickupAddress}
+          />
+          <FormField
+            label="Address line 2"
+            name="pickupAddress2"
+            autoComplete="address-line2"
+            placeholder="Suite, unit, building, etc."
+          />
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-[1fr_5.5rem_6.5rem]">
+            <FormField
+              label="City"
+              name="pickupCity"
+              autoComplete="address-level2"
+              placeholder="Atlanta"
+              required
+              error={fieldErrors.pickupCity}
+            />
+            <FormField label="State" required error={fieldErrors.pickupState}>
+              {({ id, className }) => (
+                <Select id={id} name="pickupState" autoComplete="address-level1" className={className}>
+                  <option value="">—</option>
+                  {US_STATES.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </Select>
+              )}
+            </FormField>
+            <FormField label="ZIP" required error={fieldErrors.pickupZip}>
+              {({ id, className }) => (
+                <input
+                  id={id}
+                  name="pickupZip"
+                  autoComplete="postal-code"
+                  inputMode="numeric"
+                  placeholder="30301"
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                  className={className}
+                />
+              )}
+            </FormField>
+          </div>
+        </fieldset>
+
+        {/* ── Password ── */}
+        <div className="border-t border-border/50 pt-5">
           <FormField label="Password" required error={fieldErrors.password}>
             {({ id, className }) => (
               <div className="relative">
@@ -122,13 +219,12 @@ export function SignupForm() {
               {[0, 1, 2, 3].map((i) => (
                 <span
                   key={i}
-                  className="h-1 flex-1 rounded-full transition-colors duration-200"
-                  style={{
-                    backgroundColor:
-                      i < strength
-                        ? ['#DEB990', '#C4956A', '#6B7F5E', '#059669'][Math.min(strength - 1, 3)]
-                        : 'rgba(221, 217, 210, 0.6)',
-                  }}
+                  className={cn(
+                    'h-1 flex-1 rounded-full transition-colors duration-200',
+                    i < strength
+                      ? STRENGTH_BG[Math.min(strength - 1, 3)]
+                      : 'bg-border/60'
+                  )}
                 />
               ))}
             </div>

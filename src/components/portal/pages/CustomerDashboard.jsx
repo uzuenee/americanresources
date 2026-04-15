@@ -1,12 +1,41 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { PortalPageHeader } from '../PortalShell';
 import { Card, CardHeader } from '../Card';
 import { StatusBadge } from '../StatusBadge';
 import { MaterialLabel } from '../MaterialChip';
 import { TruckIcon, FileTextIcon, ArrowRightIcon } from '../icons';
 import { cn } from '@/utils/cn';
+
+function WelcomeBanner({ onDismiss }) {
+  return (
+    <div className="mx-auto w-full max-w-7xl px-6 pt-6 lg:px-8">
+      <div className="relative rounded-sm border border-copper/40 bg-copper-light/40 px-5 py-4 pr-14 sm:pr-16">
+        <p className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-copper">
+          Welcome aboard
+        </p>
+        <p className="mt-2 font-sans text-[0.9375rem] font-semibold text-text-primary">
+          Account confirmed — welcome to American Resources.
+        </p>
+        <p className="mt-1 font-sans text-[0.875rem] text-text-muted">
+          Submit your first pickup request whenever you&apos;re ready. We
+          usually confirm within one business day.
+        </p>
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label="Dismiss welcome message"
+          className="absolute right-2 top-2 inline-flex items-center rounded-sm px-2.5 py-1.5 font-sans text-[0.75rem] font-semibold text-text-muted transition-colors before:absolute before:inset-[-8px] before:content-[''] hover:bg-offwhite hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-light"
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -35,8 +64,16 @@ function relativeTime(iso) {
   return `${diffMo} mo ago`;
 }
 
-export function CustomerDashboard({ customer, lastEntry, nextRequest, activity }) {
+export function CustomerDashboard({ customer, lastEntry, nextRequest, activity, showWelcome = false }) {
+  const router = useRouter();
+  const [welcomeVisible, setWelcomeVisible] = useState(showWelcome);
+
   if (!customer) return null;
+
+  const dismissWelcome = () => {
+    setWelcomeVisible(false);
+    router.replace('/portal/dashboard');
+  };
 
   const sinceLabel = customer.since
     ? new Date(customer.since + 'T00:00:00').toLocaleDateString('en-US', {
@@ -67,6 +104,7 @@ export function CustomerDashboard({ customer, lastEntry, nextRequest, activity }
           </Link>
         }
       />
+      {welcomeVisible && <WelcomeBanner onDismiss={dismissWelcome} />}
       <div className="mx-auto w-full max-w-7xl flex-1 px-6 py-8 lg:px-8">
         <section className="mb-10 grid grid-cols-1 gap-8 border-b border-border pb-10 lg:grid-cols-[2fr_3fr] lg:items-end lg:gap-12">
           <div>

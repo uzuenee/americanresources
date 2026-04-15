@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://americanresources.com
+Host: https://recyclinggroup.com
 
 # Sitemaps
-Sitemap: https://americanresources.com/sitemap.xml
+Sitemap: https://recyclinggroup.com/sitemap.xml

@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://americanresources.com',
+  siteUrl: 'https://recyclinggroup.com',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
 };

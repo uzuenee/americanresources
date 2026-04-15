@@ -4,7 +4,7 @@ import { RouteTransitionProvider } from '@/components/RouteTransition';
 import './globals.css';
 
 const barlowCondensed = Barlow_Condensed({
-  weight: ['400', '600', '700'],
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   variable: '--font-serif',
   display: 'swap',
@@ -44,7 +44,7 @@ const jsonLd = {
   name: 'American Resources',
   description:
     "Atlanta's trusted recycling partner. Environmental consulting, paper shredding, scrap metal, electronics, appliance & auto recycling for businesses.",
-  url: 'https://americanresources.com',
+  url: 'https://recyclinggroup.com',
   telephone: '+1-770-934-8248',
   email: 'info@recyclinggroup.com',
   address: {
