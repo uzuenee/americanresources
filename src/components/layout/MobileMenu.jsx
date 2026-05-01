@@ -11,7 +11,7 @@ function isModifiedEvent(e) {
   return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
 }
 
-export function MobileMenu({ isOpen, onClose, links }) {
+export function MobileMenu({ isOpen, onClose, links, authState = null }) {
   const pathname = usePathname();
   const { transitionTo } = useRouteTransition();
 
@@ -153,18 +153,28 @@ export function MobileMenu({ isOpen, onClose, links }) {
                 >
                   Get a Quote
                 </Link>
-                <Link
-                  href="/login"
-                  onClick={(e) => {
-                    if (isModifiedEvent(e)) return;
-                    e.preventDefault();
-                    onClose();
-                    transitionTo('/login', 'forward');
-                  }}
-                  className="inline-block font-sans font-semibold text-white/80 hover:text-white transition-colors"
-                >
-                  Sign In &rarr;
-                </Link>
+                {authState ? (
+                  <Link
+                    href={authState.portalHref}
+                    onClick={onClose}
+                    className="inline-block font-sans font-semibold text-white/80 hover:text-white transition-colors"
+                  >
+                    Go to Portal &rarr;
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={(e) => {
+                      if (isModifiedEvent(e)) return;
+                      e.preventDefault();
+                      onClose();
+                      transitionTo('/login', 'forward');
+                    }}
+                    className="inline-block font-sans font-semibold text-white/80 hover:text-white transition-colors"
+                  >
+                    Sign In &rarr;
+                  </Link>
+                )}
               </div>
             </div>
           </div>

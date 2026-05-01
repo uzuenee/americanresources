@@ -7,7 +7,7 @@ import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.sha
 
 function FrozenRouter({ children }) {
   const context = useContext(LayoutRouterContext);
-  const frozen = useRef(context).current;
+  const [frozen] = useState(context);
   return (
     <LayoutRouterContext.Provider value={frozen}>
       {children}
@@ -39,7 +39,7 @@ export function PageTransition({ children }) {
   useEffect(() => {
     if (pathname !== displayed.pathname) {
       // New route: hide current content, which triggers AnimatePresence exit
-      setShow(false);
+      queueMicrotask(() => setShow(false));
     }
   }, [pathname, displayed.pathname]);
 

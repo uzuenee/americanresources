@@ -25,7 +25,9 @@
 
   --font-serif: "Barlow Condensed", "Arial Narrow", sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-reading: "Source Serif 4", Georgia, serif;
 
   --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -126,5 +128,243 @@ body {
 ::selection {
   background-color: var(--color-copper-light);
   color: var(--color-navy-dark);
+}
+
+/* Article page — navy selection override */
+.article-page ::selection {
+  background-color: var(--color-navy);
+  color: var(--color-offwhite);
+}
+
+/* ---------------------------------------------------------------
+   ARTICLE TEMPLATE STYLES
+   --------------------------------------------------------------- */
+
+/* Ken Burns slow drift on hero image */
+@keyframes kenBurns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.04); }
+}
+.article-hero-ken-burns {
+  animation: kenBurns 24s linear infinite alternate;
+}
+
+/* Drop cap — first paragraph after key takeaways */
+.article-drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.5em;
+  line-height: 0.9;
+  margin-right: 0.08em;
+  margin-top: 0.1em;
+  color: var(--color-copper);
+}
+@media (max-width: 639px) {
+  .article-drop-cap::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+    color: inherit;
+  }
+}
+
+/* Unordered list — copper square markers */
+.article-ul {
+  list-style: none;
+  padding-left: 1.5em;
+}
+.article-ul li {
+  position: relative;
+  line-height: 1.7;
+}
+.article-ul li::before {
+  content: '';
+  position: absolute;
+  left: -1.5em;
+  top: 0.55em;
+  width: 0.375em;
+  height: 0.375em;
+  background: var(--color-copper);
+}
+
+/* Ordered list — display serif copper numbers */
+.article-ol {
+  list-style: none;
+  padding-left: 1.5em;
+  counter-reset: article-ol;
+}
+.article-ol li {
+  position: relative;
+  counter-increment: article-ol;
+  line-height: 1.7;
+}
+.article-ol li::before {
+  content: counter(article-ol) '.';
+  position: absolute;
+  left: -1.5em;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1em;
+  color: var(--color-copper);
+}
+
+/* Reading progress bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9999;
+  background: transparent;
+  pointer-events: none;
+}
+.reading-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-copper), var(--color-copper-dark));
+  transition: width 100ms linear;
+}
+
+/* Article heading separator */
+.article-heading-rule {
+  width: 32px;
+  height: 2px;
+  background: var(--color-copper);
+}
+
+/* Horizontal rule with gradient fade edges */
+.article-hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border) 20%, var(--color-border) 80%, transparent);
+}
+
+/* Tooltip fade animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* CTA shimmer border */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.cta-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(196,149,106,0.3), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-shimmer {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   PRINT STYLESHEET
+   --------------------------------------------------------------- */
+@media print {
+  /* Hide non-essential elements */
+  nav,
+  .article-hero-ken-burns,
+  .article-reading-rig aside,
+  footer,
+  .skip-link {
+    display: none !important;
+  }
+
+  /* Reset to clean print layout */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  .article-page {
+    background: white !important;
+  }
+
+  /* Hero simplification */
+  .article-hero {
+    height: auto !important;
+    min-height: auto !important;
+    position: relative !important;
+    page-break-after: always;
+  }
+
+  /* Hide sticky header and CTA section */
+  [role="navigation"][aria-label="Article navigation"],
+  section:has(> .bg-navy-dark),
+  .bg-navy-dark {
+    display: none !important;
+  }
+
+  /* Body text */
+  .article-body {
+    max-width: 100% !important;
+  }
+
+  .article-body p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Force page breaks before major headings */
+  .article-body h2 {
+    page-break-before: always;
+    color: black !important;
+  }
+
+  .article-body h3 {
+    page-break-after: avoid;
+    color: black !important;
+  }
+
+  /* Keep callouts together */
+  .article-body aside {
+    page-break-inside: avoid;
+  }
+
+  /* Images */
+  .article-body figure {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+    filter: none !important;
+  }
+
+  /* Links: show URL */
+  .article-body a[href^="http"]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Copper elements → grayscale */
+  .bg-copper,
+  .text-copper,
+  .border-copper {
+    filter: grayscale(1);
+  }
+
+  /* Footer with site URL */
+  @page {
+    margin: 1in;
+    @bottom-center {
+      content: 'American Resources · recyclinggroup.com';
+      font-family: var(--font-sans);
+      font-size: 8pt;
+      color: #999;
+    }
+  }
 }
 

@@ -1,11 +1,17 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import {
+  PASSWORD_RECOVERY_COOKIE,
+  PASSWORD_RECOVERY_COOKIE_OPTIONS,
+} from '@/lib/auth-recovery';
+import {
   sendSignupConfirmation,
   sendPasswordReset,
+  sendAdminSignupAlert,
 } from '@/lib/email/events';
 
 // All actions are designed for React 19's useActionState hook:
@@ -24,6 +30,10 @@ function siteUrl() {
   );
 }
 
+function isEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 // Build a URL that lands on our /auth/callback route handler so we control
 // verification + cookie setting (rather than letting Supabase's hosted /verify
 // endpoint handle it and bounce through). The token_hash + type are read by
@@ -36,6 +46,7 @@ function callbackUrl({ tokenHash, type, next }) {
 export async function loginAction(_prevState, formData) {
   const email = stringField(formData, 'email');
   const password = formData.get('password');
+  const redirectTo = stringField(formData, 'redirectTo');
 
   if (!email || !password) {
     return { error: 'Enter your email and password to sign in.' };
@@ -68,6 +79,17 @@ export async function loginAction(_prevState, formData) {
     }
   }
 
+  // Honor the return URL if it's a safe internal path
+  if (
+    redirectTo &&
+    redirectTo.startsWith('/') &&
+    !redirectTo.startsWith('//') &&
+    !redirectTo.startsWith('/login') &&
+    !redirectTo.startsWith('/signup')
+  ) {
+    destination = redirectTo;
+  }
+
   redirect(destination);
 }
 
@@ -96,6 +118,9 @@ export async function signupAction(_prevState, formData) {
   if (!pickupCity) errors.pickupCity = 'City is required.';
   if (!pickupState) errors.pickupState = 'State is required.';
   if (!pickupZip || !/^\d{5}$/.test(pickupZip)) errors.pickupZip = 'Enter a 5-digit ZIP code.';
+  if (!phone || phone.replace(/\D/g, '').length !== 10) {
+    errors.phone = 'A 10-digit phone number is required.';
+  }
   if (!agreed) errors.agreed = 'Accept the terms to continue.';
 
   if (Object.keys(errors).length > 0) {
@@ -144,6 +169,34 @@ export async function signupAction(_prevState, formData) {
     await sendSignupConfirmation({ to: email, fullName, company, confirmUrl });
   }
 
+  const { data: newCustomer } = await admin
+    .from('customers')
+    .select('id')
+    .eq('contact_email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
+    'http://localhost:3000';
+
+  sendAdminSignupAlert({
+    company,
+    contactName: fullName,
+    contactEmail: email,
+    contactPhone: phone,
+    address: {
+      street: pickupAddress,
+      city: pickupCity,
+      state: pickupState,
+      zip: pickupZip,
+    },
+    adminUrl: newCustomer
+      ? `${baseUrl}/admin/customers/${newCustomer.id}`
+      : `${baseUrl}/admin/customers`,
+  });
+
   return { success: true };
 }
 
@@ -152,6 +205,9 @@ export async function requestPasswordResetAction(_prevState, formData) {
 
   if (!email) {
     return { error: 'Enter your email address.' };
+  }
+  if (!isEmail(email)) {
+    return { error: 'Please enter a valid email address.' };
   }
 
   const admin = createAdminClient();
@@ -177,7 +233,7 @@ export async function requestPasswordResetAction(_prevState, formData) {
       type: 'recovery',
       next: '/reset-password',
     });
-    await sendPasswordReset({ to: email, fullName, resetUrl });
+    await sendPasswordReset({ to: email, fullName, resetUrl, tokenHash });
   }
 
   return { success: true };
@@ -186,6 +242,21 @@ export async function requestPasswordResetAction(_prevState, formData) {
 export async function updatePasswordAction(_prevState, formData) {
   const password = formData.get('password');
   const confirm = formData.get('confirm');
+  const cookieStore = await cookies();
+  const supabase = await createClient();
+
+  if (cookieStore.get(PASSWORD_RECOVERY_COOKIE)?.value !== '1') {
+    return { error: 'This link is invalid or has expired.' };
+  }
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (sessionError || !session) {
+    return { error: 'This link is invalid or has expired.' };
+  }
 
   if (!password || String(password).length < 8) {
     return { error: 'Password must be at least 8 characters.' };
@@ -194,7 +265,6 @@ export async function updatePasswordAction(_prevState, formData) {
     return { error: "Passwords don't match." };
   }
 
-  const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({
     password: String(password),
   });
@@ -210,6 +280,10 @@ export async function updatePasswordAction(_prevState, formData) {
   }
 
   // Sign out so the user logs in fresh with the new password.
+  cookieStore.set(PASSWORD_RECOVERY_COOKIE, '', {
+    ...PASSWORD_RECOVERY_COOKIE_OPTIONS,
+    maxAge: 0,
+  });
   await supabase.auth.signOut();
   redirect('/login?reset=ok');
 }

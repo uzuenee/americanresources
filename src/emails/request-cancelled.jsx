@@ -31,7 +31,7 @@ export function RequestCancelled({
       <Text className="mt-[12px] mb-[24px] text-[15px] leading-[24px] text-text-primary">
         Your pending request for <strong>{company}</strong> has been cancelled
         by our dispatch team. If this was unexpected, reply to this email or
-        call {companyInfo.phone} and we'll sort it out.
+        call {companyInfo.phone} and we&apos;ll sort it out.
       </Text>
 
       <Section className="bg-offwhite-alt rounded-[6px] p-[20px] mt-[8px]">

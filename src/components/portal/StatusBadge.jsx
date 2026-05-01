@@ -2,6 +2,7 @@ import { cn } from '@/utils/cn';
 
 const STATUS_STYLES = {
   active: { bg: 'bg-sage-light', text: 'text-[#3F5232]', label: 'Active' },
+  pending: { bg: 'bg-[#FEF3C7]', text: 'text-[#92400E]', label: 'Pending' },
   pilot: { bg: 'bg-[#EFDFC8]', text: 'text-copper-dark', label: 'Pilot' },
   under_review: { bg: 'bg-[#EFDFC8]', text: 'text-copper-dark', label: 'Under Review' },
   scheduled: { bg: 'bg-sage-light', text: 'text-[#3F5232]', label: 'Scheduled' },

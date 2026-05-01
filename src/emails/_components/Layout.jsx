@@ -80,7 +80,7 @@ export function Layout({ preview, children }) {
                 </Link>
               </Text>
               <Text className="m-0 mt-[12px] text-[12px] leading-[18px] text-text-muted">
-                Sent from {senderEmail}. Replies go to our team and we'll get
+                Sent from {senderEmail}. Replies go to our team and we&apos;ll get
                 back to you within one business day.
               </Text>
             </Section>

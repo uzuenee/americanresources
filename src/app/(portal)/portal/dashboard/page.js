@@ -1,5 +1,5 @@
 import { getCustomerPortalSession } from '@/lib/portal-session';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { CustomerDashboard } from '@/components/portal/pages/CustomerDashboard';
 
 export const metadata = { title: 'Dashboard' };
@@ -8,19 +8,18 @@ export default async function CustomerDashboardPage({ searchParams }) {
   const sp = (await searchParams) || {};
   const showWelcome = sp.welcome === '1';
 
-  const { customer, recentActivity } = await getCustomerPortalSession();
+  const session = await getCustomerPortalSession();
+  const { customer, recentActivity } = session;
 
-  const supabase = await createClient();
-  const customerId = customer?.id;
+  const supabase = createAdminClient();
+  const customerId = session.user.customerId;
 
-  const [lastEntryRes, nextRequestRes] = await Promise.all([
+  const [entriesRes, nextRequestRes] = await Promise.all([
     supabase
       .from('recycling_entries')
       .select('entry_date, material, weight_lbs')
       .eq('customer_id', customerId)
-      .order('entry_date', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+      .order('entry_date', { ascending: false }),
 
     supabase
       .from('pickup_requests')
@@ -32,11 +31,25 @@ export default async function CustomerDashboardPage({ searchParams }) {
       .maybeSingle(),
   ]);
 
-  const lastEntry = lastEntryRes.data
+  const entries = entriesRes.data ?? [];
+  const totalWeight = entries.reduce(
+    (sum, row) => sum + Number(row.weight_lbs || 0),
+    0
+  );
+  const customerWithStats = customer
     ? {
-        date: lastEntryRes.data.entry_date,
-        material: lastEntryRes.data.material,
-        weight: lastEntryRes.data.weight_lbs,
+        ...customer,
+        totalWeight,
+        totalPickups: entries.length,
+      }
+    : customer;
+
+  const lastEntryRow = entries[0];
+  const lastEntry = lastEntryRow
+    ? {
+        date: lastEntryRow.entry_date,
+        material: lastEntryRow.material,
+        weight: lastEntryRow.weight_lbs,
       }
     : null;
 
@@ -53,11 +66,12 @@ export default async function CustomerDashboardPage({ searchParams }) {
 
   return (
     <CustomerDashboard
-      customer={customer}
+      customer={customerWithStats}
       lastEntry={lastEntry}
       nextRequest={nextRequest}
       activity={recentActivity}
       showWelcome={showWelcome}
+      showRequested={sp.requested === '1'}
     />
   );
 }

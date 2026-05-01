@@ -11,6 +11,7 @@ import { useToast } from '../Toast';
 import { materialMeta } from '@/lib/materials';
 import { deleteEntryAction } from '@/app/actions/entries';
 import { TrashIcon } from '../icons';
+import { generateCSV, downloadCSV } from '@/lib/csv-export';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -52,7 +53,7 @@ export function AdminReporting({ entries: allEntries, customers }) {
     if (fromDate) data = data.filter((e) => e.date >= fromDate);
     if (toDate) data = data.filter((e) => e.date <= toDate);
     return data;
-  }, [allEntries, customerId, material, fromDate, toDate]);
+  }, [entries, customerId, material, fromDate, toDate]);
 
   const totalWeight = filtered.reduce((sum, e) => sum + Number(e.weight || 0), 0);
   const uniqueCustomers = new Set(filtered.map((e) => e.customerId)).size;
@@ -193,9 +194,22 @@ export function AdminReporting({ entries: allEntries, customers }) {
           footer={
             <button
               type="button"
-              disabled
-              title="Export coming soon"
-              className="inline-flex items-center gap-2 rounded-sm border border-border bg-surface px-4 py-2 font-sans text-[0.75rem] font-medium text-text-muted opacity-60"
+              onClick={() => {
+                const csvColumns = [
+                  { header: 'Date', key: 'date' },
+                  { header: 'Account', key: 'customerCompany' },
+                  { header: 'Stream', key: 'materialLabel' },
+                  { header: 'Weight (lbs)', key: 'weight' },
+                  { header: 'Notes', key: 'notes' },
+                ];
+                const csvRows = filtered.map((e) => ({
+                  ...e,
+                  materialLabel: materialMeta[e.material]?.label || e.material,
+                }));
+                const csv = generateCSV(csvColumns, csvRows);
+                downloadCSV(csv, `reporting-${new Date().toISOString().slice(0, 10)}.csv`);
+              }}
+              className="inline-flex items-center gap-2 rounded-sm border border-border bg-surface px-4 py-2 font-sans text-[0.75rem] font-medium text-text-primary transition-colors hover:border-navy hover:bg-offwhite-alt"
             >
               Export CSV
             </button>

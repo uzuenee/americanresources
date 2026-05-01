@@ -243,10 +243,12 @@ function ContactModal({ open, onClose }) {
 
   useEffect(() => {
     if (open) {
-      setSubject('');
-      setMessage('');
-      setErrors({});
-      setSubmitting(false);
+      queueMicrotask(() => {
+        setSubject('');
+        setMessage('');
+        setErrors({});
+        setSubmitting(false);
+      });
     }
   }, [open]);
 
@@ -267,7 +269,7 @@ function ContactModal({ open, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const next = {};
-    if (!subject.trim()) next.subject = "What's this about?";
+    if (!subject.trim()) next.subject = 'Subject is required';
     if (!message.trim()) next.message = 'Leave us a message.';
     if (Object.keys(next).length) {
       setErrors(next);
@@ -277,7 +279,7 @@ function ContactModal({ open, onClose }) {
     setSubmitting(true);
     setTimeout(() => {
       toast({
-        title: 'Message sent',
+        title: 'Message sent successfully.',
         description: "We'll get back to you within one business day.",
       });
       setSubmitting(false);

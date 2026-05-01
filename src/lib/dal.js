@@ -1,8 +1,25 @@
 import 'server-only';
 
 import { cache } from 'react';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+
+async function getLoginRedirectUrl() {
+  try {
+    const h = await headers();
+    const currentPath =
+      h.get('x-invoke-path') ||
+      h.get('x-matched-path') ||
+      '';
+    if (currentPath && currentPath !== '/login' && currentPath !== '/') {
+      return `/login?redirect=${encodeURIComponent(currentPath)}`;
+    }
+  } catch {
+    // headers() may not be available in all contexts
+  }
+  return '/login';
+}
 
 // Data Access Layer. Every Server Component / Server Action / Route Handler
 // that needs an authenticated user should call one of these. verifySession() is
@@ -28,7 +45,7 @@ export const verifySession = cache(async () => {
 
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('id, role, customer_id, full_name, phone, title, avatar_url')
+    .select('id, role, customer_id, full_name, phone, title, avatar_url, customers(status)')
     .eq('id', user.id)
     .single();
 
@@ -36,13 +53,21 @@ export const verifySession = cache(async () => {
     return null;
   }
 
-  return { user, profile };
+  return {
+    user,
+    profile: {
+      ...profile,
+      customerStatus: profile.customers?.status ?? null,
+      customers: undefined,
+    },
+  };
 });
 
 export async function requireSession() {
   const session = await verifySession();
   if (!session) {
-    redirect('/login');
+    const loginUrl = await getLoginRedirectUrl();
+    redirect(loginUrl);
   }
   return session;
 }
@@ -51,6 +76,9 @@ export async function requireCustomer() {
   const session = await requireSession();
   if (session.profile.role !== 'customer' || !session.profile.customer_id) {
     redirect('/forbidden');
+  }
+  if (session.profile.customerStatus === 'pending') {
+    redirect('/pending-approval');
   }
   return session;
 }

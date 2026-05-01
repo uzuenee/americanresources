@@ -34,4 +34,3 @@ double_confirm_changes = true
 # so Supabase's own mailer is bypassed entirely. We need confirmations enabled
 # so users start as confirmed=false and the token from generateLink is real.
 enable_confirmations = true
-mailer_autoconfirm = false

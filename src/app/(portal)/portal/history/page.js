@@ -1,17 +1,17 @@
 import { getCustomerPortalSession } from '@/lib/portal-session';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { CustomerHistory } from '@/components/portal/pages/CustomerHistory';
 
 export const metadata = { title: 'Load history' };
 
 export default async function CustomerHistoryPage() {
-  const { customer } = await getCustomerPortalSession();
+  const { user } = await getCustomerPortalSession();
 
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from('recycling_entries')
     .select('id, entry_date, material, weight_lbs, notes, status')
-    .eq('customer_id', customer?.id)
+    .eq('customer_id', user.customerId)
     .order('entry_date', { ascending: false });
 
   const entries = (data ?? []).map((row) => ({

@@ -26,15 +26,16 @@ const navLinks = [
   { label: 'FAQ', href: '/faq' },
 ];
 
-export function Navbar() {
+// Pages with light hero backgrounds need dark nav text even before scroll
+const lightPages = ['/blog', '/guides', '/faq', '/contact', '/about'];
+
+export function Navbar({ authState = null }) {
   const scrollY = useScrollPosition();
   const isScrolled = scrollY > 50;
   const pathname = usePathname();
   const { transitionTo } = useRouteTransition();
 
-  // Pages with light hero backgrounds need dark nav text even before scroll
-  const lightPages = ['/blog', '/guides', '/faq', '/contact', '/about'];
-  const isLightPage = lightPages.some(p => pathname === p || pathname.startsWith(p + '/'));
+  const isLightPage = lightPages.some((p) => pathname === p || pathname.startsWith(`${p}/`));
   const useDarkText = isLightPage || isScrolled;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -56,6 +57,39 @@ export function Navbar() {
     }
   }, [dropdownOpen]);
 
+  // Arrow-key navigation within the dropdown menu
+  const handleMenuKeyDown = (e) => {
+    const menu = dropdownRef.current?.querySelector('[role="menu"]');
+    if (!menu) return;
+    const items = [...menu.querySelectorAll('[role="menuitem"]')];
+    if (items.length === 0) return;
+    const current = items.indexOf(document.activeElement);
+
+    let next;
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        next = current < items.length - 1 ? current + 1 : 0;
+        items[next].focus();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        next = current > 0 ? current - 1 : items.length - 1;
+        items[next].focus();
+        break;
+      case 'Home':
+        e.preventDefault();
+        items[0].focus();
+        break;
+      case 'End':
+        e.preventDefault();
+        items[items.length - 1].focus();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       <nav
@@ -72,7 +106,7 @@ export function Navbar() {
           <Link href="/" className="relative flex-shrink-0" aria-label="American Resources — Home">
             <Image
               src="/American-Resources_realLogo.webp"
-              alt=""
+              alt="American Resources"
               width={180}
               height={50}
               className={cn(
@@ -101,9 +135,17 @@ export function Navbar() {
                         e.preventDefault();
                         setDropdownOpen(!dropdownOpen);
                       }
-                      if (e.key === 'ArrowDown' && !dropdownOpen) {
+                      if (e.key === 'ArrowDown') {
                         e.preventDefault();
-                        setDropdownOpen(true);
+                        if (!dropdownOpen) {
+                          setDropdownOpen(true);
+                        }
+                        // Focus first menu item after render
+                        setTimeout(() => {
+                          const menu = dropdownRef.current?.querySelector('[role="menu"]');
+                          const firstItem = menu?.querySelector('[role="menuitem"]');
+                          if (firstItem) firstItem.focus();
+                        }, 0);
                       }
                     }}
                     aria-expanded={dropdownOpen}
@@ -136,13 +178,14 @@ export function Navbar() {
 
                 {/* Dropdown */}
                 {link.dropdown && dropdownOpen && (
-                  <div className="absolute top-full left-0 pt-2" role="menu">
+                  <div className="absolute top-full left-0 pt-2" role="menu" onKeyDown={handleMenuKeyDown}>
                     <div className="bg-white rounded-xl shadow-xl border border-border py-3 px-2 min-w-[16.25rem]">
                       {link.dropdown.map((item) => (
                         <Link
                           key={item.href}
                           href={item.href}
                           role="menuitem"
+                          tabIndex={-1}
                           className="block px-4 py-2.5 font-serif text-lg text-text-primary hover:bg-navy-pale rounded-lg transition-colors duration-150"
                           onClick={() => setDropdownOpen(false)}
                         >
@@ -166,21 +209,33 @@ export function Navbar() {
               {companyInfo.phone}
             </a>
 
-            {/* Sign In */}
-            <Link
-              href="/login"
-              onClick={(e) => {
-                if (isModifiedEvent(e)) return;
-                e.preventDefault();
-                transitionTo('/login', 'forward');
-              }}
-              className={cn(
-                'font-sans text-[0.9375rem] font-medium transition-colors duration-200',
-                useDarkText ? 'text-text-primary hover:text-copper' : 'text-white hover:text-navy-pale'
-              )}
-            >
-              Sign In
-            </Link>
+            {/* Sign In / Portal */}
+            {authState ? (
+              <Link
+                href={authState.portalHref}
+                className={cn(
+                  'font-sans text-[0.9375rem] font-medium transition-colors duration-200',
+                  useDarkText ? 'text-text-primary hover:text-copper' : 'text-white hover:text-navy-pale'
+                )}
+              >
+                Go to Portal
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={(e) => {
+                  if (isModifiedEvent(e)) return;
+                  e.preventDefault();
+                  transitionTo('/login', 'forward');
+                }}
+                className={cn(
+                  'font-sans text-[0.9375rem] font-medium transition-colors duration-200',
+                  useDarkText ? 'text-text-primary hover:text-copper' : 'text-white hover:text-navy-pale'
+                )}
+              >
+                Sign In
+              </Link>
+            )}
 
             {/* CTA */}
             <Link
@@ -208,6 +263,7 @@ export function Navbar() {
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
         links={navLinks}
+        authState={authState}
       />
     </>
   );

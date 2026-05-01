@@ -12,7 +12,7 @@ const ROUTE_ORDER = {
 
 function FrozenRouter({ children }) {
   const context = useContext(LayoutRouterContext);
-  const frozen = useRef(context).current;
+  const [frozen] = useState(context);
   return (
     <LayoutRouterContext.Provider value={frozen}>
       {children}
@@ -40,14 +40,12 @@ export function AuthPageTransition({ children }) {
     latestRef.current = { children, pathname };
   });
 
-  const directionRef = useRef(0);
+  const direction =
+    Math.sign((ROUTE_ORDER[pathname] ?? 0) - (ROUTE_ORDER[displayed.pathname] ?? 0)) || 1;
 
   useEffect(() => {
     if (pathname !== displayed.pathname) {
-      const from = ROUTE_ORDER[displayed.pathname] ?? 0;
-      const to = ROUTE_ORDER[pathname] ?? 0;
-      directionRef.current = Math.sign(to - from) || 1;
-      setShow(false);
+      queueMicrotask(() => setShow(false));
     }
   }, [pathname, displayed.pathname]);
 
@@ -68,13 +66,13 @@ export function AuthPageTransition({ children }) {
       <AnimatePresence
         initial={false}
         mode="wait"
-        custom={directionRef.current}
+        custom={direction}
         onExitComplete={handleExitComplete}
       >
         {show && (
           <m.div
             key={displayed.pathname}
-            custom={directionRef.current}
+            custom={direction}
             variants={variants}
             initial="hidden"
             animate="enter"

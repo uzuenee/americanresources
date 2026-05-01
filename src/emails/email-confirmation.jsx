@@ -23,7 +23,7 @@ export function EmailConfirmation({
 
       <Text className="mt-[12px] mb-0 text-[15px] leading-[24px] text-text-primary">
         Your account for <strong>{company}</strong> is set up. Confirm your
-        email so we can verify it's really you, and you'll be ready to schedule
+        email so we can verify it&apos;s really you, and you&apos;ll be ready to schedule
         your first pickup.
       </Text>
 
@@ -40,7 +40,7 @@ export function EmailConfirmation({
       </Text>
 
       <Text className="mt-[28px] mb-0 text-[13px] leading-[20px] text-text-muted">
-        This link expires in 24 hours. If you didn't create an account, you can
+        This link expires in 24 hours. If you didn&apos;t create an account, you can
         safely ignore this email.
       </Text>
     </Layout>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import Link from 'next/link';
 import { FormField } from './FormField';
 import { ArrowRightIcon, MailIcon } from './icons';
@@ -8,11 +8,32 @@ import { requestPasswordResetAction } from '@/app/actions/auth';
 
 const initialState = { error: null };
 
+function isEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 export function ForgotPasswordForm() {
   const [state, formAction, isPending] = useActionState(
     requestPasswordResetAction,
     initialState
   );
+  const [email, setEmail] = useState('');
+  const [clientError, setClientError] = useState('');
+
+  const emailError = clientError || state?.error;
+
+  const validateBeforeSubmit = (e) => {
+    const trimmed = email.trim();
+    if (!trimmed) {
+      e.preventDefault();
+      setClientError('Enter your email address.');
+      return;
+    }
+    if (!isEmail(trimmed)) {
+      e.preventDefault();
+      setClientError('Please enter a valid email address.');
+    }
+  };
 
   if (state?.success) {
     return (
@@ -50,7 +71,7 @@ export function ForgotPasswordForm() {
         Enter your email and we&apos;ll send you a reset link.
       </p>
 
-      <form action={formAction} noValidate className="mt-8 space-y-5">
+      <form action={formAction} onSubmit={validateBeforeSubmit} noValidate className="mt-8 space-y-5">
         <FormField
           label="Email"
           type="email"
@@ -58,16 +79,13 @@ export function ForgotPasswordForm() {
           autoComplete="email"
           placeholder="you@company.com"
           required
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (clientError) setClientError('');
+          }}
+          error={emailError}
         />
-
-        {state?.error && (
-          <p
-            role="alert"
-            className="rounded-sm border border-danger/30 bg-danger/5 px-3 py-2 font-sans text-[0.8125rem] text-danger"
-          >
-            {state.error}
-          </p>
-        )}
 
         <button
           type="submit"

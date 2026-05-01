@@ -1,112 +1,129 @@
-'use client';
-import { useState } from 'react';
 import Image from 'next/image';
-import { Hero } from '@/components/sections/Hero';
+import Link from 'next/link';
 import { AnimateOnScroll } from '@/components/ui/AnimateOnScroll';
-import { blogPosts } from '@/data/blogPosts';
-import { cn } from '@/utils/cn';
+import { Eyebrow } from '@/components/ui/Eyebrow';
+import { createClient } from '@/lib/supabase/server';
+import { articles } from '@/data/articles';
+const guides = articles.filter((a) => a.type === 'guide');
+import { normalizeCmsPost } from '@/lib/article-utils';
 
-const categoryStyles = {
-  'HOW-TO': 'bg-navy-pale text-navy-light',
-  'INDUSTRY NEWS': 'bg-accent-light text-accent',
-  ATLANTA: 'bg-sage-light text-sage',
+export const metadata = {
+  title: 'Guides',
+  description:
+    "In-depth guides to help your business navigate waste management, compliance, and sustainability in the Atlanta metro area.",
+  openGraph: {
+    type: 'website',
+    title: 'Guides — American Resources',
+    description: 'In-depth guides to help your business navigate waste management, compliance, and sustainability in the Atlanta metro area.',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Guides — American Resources',
+    description: 'In-depth guides to help your business navigate waste management, compliance, and sustainability in the Atlanta metro area.',
+  },
 };
 
-const categories = ['All', 'HOW-TO', 'INDUSTRY NEWS', 'ATLANTA'];
+export default async function GuidesListingPage() {
+  const supabase = await createClient();
 
-function BlogCard({ post, index }) {
-  return (
-    <AnimateOnScroll delay={index * 0.08}>
-      <article>
-        <div className="relative aspect-[16/10] rounded-xl overflow-hidden mb-5">
-          <Image
-            src={post.image}
-            alt={post.title}
-            fill
-            className="object-cover editorial-image"
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
-        </div>
-        <span className={cn(
-          'inline-block font-sans text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3',
-          categoryStyles[post.category] || 'bg-navy-pale text-navy-light'
-        )}>
-          {post.category}
-        </span>
-        <h3 className="font-serif text-xl md:text-[1.375rem] text-text-primary leading-tight line-clamp-2">
-          {post.title}
-        </h3>
-        <p className="font-sans text-[0.9375rem] text-text-muted leading-relaxed mt-2 line-clamp-2">
-          {post.excerpt}
-        </p>
-        <p className="font-sans text-[0.8125rem] text-text-muted mt-3">
-          {post.date} &middot; {post.readTime}
-        </p>
-      </article>
-    </AnimateOnScroll>
-  );
-}
+  const { data: cmsGuides } = await supabase
+    .from('posts')
+    .select('id, title, slug, excerpt, type, status, hero_image, hero_alt, hero_credit, published_at, read_time_override, body, key_takeaways, faqs, footnotes, meta_description, category_id, content_categories(name)')
+    .eq('type', 'guide')
+    .eq('status', 'published')
+    .eq('visibility', 'public')
+    .order('published_at', { ascending: false });
 
-export default function BlogListingPage() {
-  const [activeCategory, setActiveCategory] = useState('All');
+  const normalizedCms = (cmsGuides ?? []).map((row) => normalizeCmsPost({
+    ...row,
+    category_name: row.content_categories?.name ?? '',
+  }));
 
-  const filtered =
-    activeCategory === 'All'
-      ? blogPosts
-      : blogPosts.filter((p) => p.category === activeCategory);
+  // Merge: CMS guides first, then static (skip matching slugs)
+  const cmsSlugSet = new Set(normalizedCms.map((g) => g.slug));
+  const staticFiltered = guides.filter((g) => !cmsSlugSet.has(g.slug));
+  const allGuides = [...normalizedCms, ...staticFiltered];
 
   return (
     <>
-      <Hero
-        height="compact"
-        light
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Guides' },
-        ]}
-        title="Insights & Guides"
-        subtitle="Expert guidance on recycling, sustainability regulations, and environmental best practices for Atlanta businesses."
-      />
-
-      {/* Filter bar */}
-      <section className="bg-offwhite pb-4">
+      {/* Page header */}
+      <section className="bg-offwhite pt-28 pb-12 lg:pb-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-16">
-          <div className="flex flex-wrap gap-3">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={cn(
-                  'font-sans text-sm font-medium px-5 py-2 rounded-full transition-all duration-200 cursor-pointer',
-                  activeCategory === cat
-                    ? 'bg-navy text-white'
-                    : 'bg-transparent border border-border text-text-muted hover:border-navy/30 hover:text-text-primary'
-                )}
-              >
-                {cat === 'All'
-                  ? 'All'
-                  : cat
-                      .toLowerCase()
-                      .split(' ')
-                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                      .join(' ')}
-              </button>
-            ))}
-          </div>
+          <AnimateOnScroll>
+            <nav aria-label="Breadcrumb" className="mb-4">
+              <ol className="flex items-center gap-2 font-sans text-sm text-text-muted">
+                <li className="flex items-center gap-2">
+                  <Link href="/" className="hover:text-navy transition-colors">Home</Link>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span aria-hidden="true">&rarr;</span>
+                  <span className="text-text-primary" aria-current="page">Guides</span>
+                </li>
+              </ol>
+            </nav>
+            <Eyebrow>RESOURCES</Eyebrow>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold uppercase text-text-primary leading-[1.1] tracking-[-0.01em]">
+              Recycling Guides
+            </h1>
+            <p className="font-sans text-lg md:text-xl text-text-muted leading-relaxed mt-4 max-w-2xl">
+              In-depth guides to help your business navigate waste management, compliance, and sustainability.
+            </p>
+          </AnimateOnScroll>
         </div>
       </section>
 
-      {/* Article grid */}
-      <section className="bg-offwhite pb-12 md:pb-16">
+      {/* Guide cards grid */}
+      <section className="bg-offwhite pb-12 md:pb-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {filtered.map((post, i) => (
-              <BlogCard key={post.slug} post={post} index={i} />
-            ))}
-          </div>
-          {filtered.length === 0 && (
+          {allGuides.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              {allGuides.map((guide, i) => (
+                <AnimateOnScroll key={guide.slug} delay={i * 0.08}>
+                  <Link href={`/guides/${guide.slug}`} className="group block h-full">
+                    <article className="bg-surface rounded-xl border border-border/60 overflow-hidden transition-colors duration-200 hover:border-copper/40 h-full flex flex-col">
+                      {guide.image && (
+                        <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
+                          <Image
+                            src={guide.image}
+                            alt={guide.heroAlt || guide.title}
+                            fill
+                            className="object-cover editorial-image transition-transform duration-500 group-hover:scale-[1.02]"
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                          />
+                        </div>
+                      )}
+                      <div className="p-6 flex flex-col flex-1">
+                        {guide.category && (
+                          <span className="inline-block self-start font-sans text-xs font-medium uppercase tracking-wider text-copper mb-2">
+                            {guide.category}
+                          </span>
+                        )}
+                        <h2 className="font-serif text-lg md:text-[1.25rem] text-text-primary leading-tight group-hover:text-navy-light transition-colors duration-200">
+                          {guide.title}
+                        </h2>
+                        <p className="font-sans text-[0.9375rem] text-text-muted leading-relaxed mt-2 line-clamp-2 flex-1">
+                          {guide.description || guide.excerpt}
+                        </p>
+                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/40">
+                          {guide.readTime && (
+                            <span className="font-sans text-[0.8125rem] text-text-muted">
+                              {guide.readTime}
+                            </span>
+                          )}
+                          <span className="font-sans text-sm font-medium text-copper group-hover:text-copper-dark transition-colors duration-200">
+                            Read guide &rarr;
+                          </span>
+                        </div>
+                      </div>
+                    </article>
+                  </Link>
+                </AnimateOnScroll>
+              ))}
+            </div>
+          )}
+          {allGuides.length === 0 && (
             <p className="font-sans text-text-muted text-center py-16">
-              No articles in this category yet.
+              No guides yet.
             </p>
           )}
         </div>

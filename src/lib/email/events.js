@@ -8,6 +8,11 @@ import AdminRequestAlert from '@/emails/admin-request-alert';
 import PickupScheduled from '@/emails/pickup-scheduled';
 import PickupCompleted from '@/emails/pickup-completed';
 import RequestCancelled from '@/emails/request-cancelled';
+import CustomerApproved from '@/emails/customer-approved';
+import AdminSignupAlert from '@/emails/admin-signup-alert';
+import AdminPickupScheduled from '@/emails/admin-pickup-scheduled';
+import AdminPickupCompleted from '@/emails/admin-pickup-completed';
+import AdminRequestCancelled from '@/emails/admin-request-cancelled';
 
 const ADMIN_INBOX =
   process.env.EMAIL_ADMIN_NOTIFICATIONS || 'info@recyclinggroup.com';
@@ -28,12 +33,12 @@ export function sendSignupConfirmation({ to, fullName, company, confirmUrl }) {
   });
 }
 
-export function sendPasswordReset({ to, fullName, resetUrl }) {
+export function sendPasswordReset({ to, fullName, resetUrl, tokenHash }) {
   return sendEmail({
     to,
     subject: 'Reset your American Resources password',
     react: <PasswordReset fullName={fullName} resetUrl={resetUrl} />,
-    idempotencyKey: `reset:${to}:${tail(resetUrl)}`,
+    idempotencyKey: `reset:${to}:${tail(tokenHash || resetUrl)}`,
     tags: [{ name: 'type', value: 'password_reset' }],
   });
 }
@@ -87,5 +92,91 @@ export function sendRequestCancelled({ to, requestId, ...payload }) {
     react: <RequestCancelled {...payload} />,
     idempotencyKey: `cancelled:${requestId}`,
     tags: [{ name: 'type', value: 'request_cancelled' }],
+  });
+}
+
+export function sendCustomerApproved({ to, fullName, company, portalUrl }) {
+  return sendEmail({
+    to,
+    subject: 'Your American Resources account is approved',
+    react: <CustomerApproved fullName={fullName} company={company} portalUrl={portalUrl} />,
+    idempotencyKey: `approved:${to}`,
+    tags: [{ name: 'type', value: 'customer_approved' }],
+  });
+}
+
+export function sendAdminSignupAlert({ company, contactName, contactEmail, contactPhone, address, adminUrl }) {
+  return sendEmail({
+    to: ADMIN_INBOX,
+    subject: `${company} — new account pending approval`,
+    react: (
+      <AdminSignupAlert
+        company={company}
+        contactName={contactName}
+        contactEmail={contactEmail}
+        contactPhone={contactPhone}
+        pickupAddress={address.street}
+        pickupCity={address.city}
+        pickupState={address.state}
+        pickupZip={address.zip}
+        adminUrl={adminUrl}
+      />
+    ),
+    idempotencyKey: `admin-signup:${contactEmail}`,
+    tags: [{ name: 'type', value: 'admin_signup_alert' }],
+  });
+}
+
+export function sendAdminPickupScheduled({ requestId, company, materialLabel, scheduledDateLabel, scheduledWindowLabel, scheduledBy, adminUrl }) {
+  return sendEmail({
+    to: ADMIN_INBOX,
+    subject: `${company} · ${materialLabel} — pickup scheduled by ${scheduledBy}`,
+    react: (
+      <AdminPickupScheduled
+        company={company}
+        materialLabel={materialLabel}
+        scheduledDateLabel={scheduledDateLabel}
+        scheduledWindowLabel={scheduledWindowLabel}
+        scheduledBy={scheduledBy}
+        adminUrl={adminUrl}
+      />
+    ),
+    idempotencyKey: `admin-scheduled:${requestId}:${scheduledDateLabel}`,
+    tags: [{ name: 'type', value: 'admin_pickup_scheduled' }],
+  });
+}
+
+export function sendAdminPickupCompleted({ requestId, company, materialLabel, weightLbs, entryDateLabel, adminUrl }) {
+  return sendEmail({
+    to: ADMIN_INBOX,
+    subject: `${company} — ${weightLbs} lbs ${materialLabel} loaded`,
+    react: (
+      <AdminPickupCompleted
+        company={company}
+        materialLabel={materialLabel}
+        weightLbs={weightLbs}
+        entryDateLabel={entryDateLabel}
+        adminUrl={adminUrl}
+      />
+    ),
+    idempotencyKey: `admin-completed:${requestId}`,
+    tags: [{ name: 'type', value: 'admin_pickup_completed' }],
+  });
+}
+
+export function sendAdminRequestCancelled({ requestId, company, materialLabel, preferredDateLabel, cancelledBy }) {
+  return sendEmail({
+    to: ADMIN_INBOX,
+    subject: `${company} · ${materialLabel} — request cancelled by ${cancelledBy}`,
+    react: (
+      <AdminRequestCancelled
+        company={company}
+        materialLabel={materialLabel}
+        preferredDateLabel={preferredDateLabel}
+        cancelledBy={cancelledBy}
+      />
+    ),
+    idempotencyKey: `admin-cancelled:${requestId}`,
+    tags: [{ name: 'type', value: 'admin_request_cancelled' }],
   });
 }

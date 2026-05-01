@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://recyclinggroup.com',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://recyclinggroup.com',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
 };

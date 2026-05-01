@@ -35,8 +35,8 @@ export function PasswordReset({ fullName, resetUrl }) {
       </Text>
 
       <Text className="mt-[28px] mb-0 text-[13px] leading-[20px] text-text-muted">
-        This link expires in one hour. If you didn't request a password reset,
-        you can safely ignore this email — your password won't change.
+        This link expires in one hour. If you didn&apos;t request a password reset,
+        you can safely ignore this email — your password won&apos;t change.
       </Text>
     </Layout>
   );

@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useActionState } from 'react';
+import { useState, useEffect, useActionState } from 'react';
 import Link from 'next/link';
 import { m, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { PortalPageHeader } from '../PortalShell';
 import { FormField, Select, Textarea } from '../FormField';
-import { ArrowRightIcon } from '../icons';
+import { ArrowRightIcon, MapPinIcon, XIcon } from '../icons';
 import { materialMeta } from '@/lib/materials';
 import { createPickupRequestAction } from '@/app/actions/requests';
 
@@ -17,16 +17,203 @@ function tomorrowISO() {
 
 const INITIAL_STATE = { fieldErrors: {}, error: null };
 
+const US_STATES = [
+  'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL',
+  'GA','HI','ID','IL','IN','IA','KS','KY','LA','ME',
+  'MD','MA','MI','MN','MS','MO','MT','NE','NV','NH',
+  'NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI',
+  'SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY',
+];
+
+function formatPhone(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 10);
+  if (digits.length <= 3) return digits.length ? `(${digits}` : '';
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
+function formatAddr(a) {
+  if (!a?.address) return null;
+  const parts = [a.address];
+  if (a.city || a.state || a.zip) {
+    parts.push([a.city, a.state].filter(Boolean).join(', ') + (a.zip ? ` ${a.zip}` : ''));
+  }
+  return parts.join(', ');
+}
+
+/* ── Address Edit Modal ── */
+function AddressModal({ open, onClose, onSave, reduceMotion }) {
+  const [addr, setAddr] = useState('');
+  const [city, setCity] = useState('');
+  const [st, setSt] = useState('');
+  const [zip, setZip] = useState('');
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (open) {
+      queueMicrotask(() => {
+        setAddr('');
+        setCity('');
+        setSt('');
+        setZip('');
+        setErrors({});
+      });
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleEsc);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open, onClose]);
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    const next = {};
+    if (!addr.trim()) next.addr = 'Street address is required.';
+    if (!city.trim()) next.city = 'City is required.';
+    if (!st) next.st = 'State is required.';
+    if (!zip || !/^\d{5}$/.test(zip)) next.zip = 'Enter a 5-digit ZIP.';
+    if (Object.keys(next).length) { setErrors(next); return; }
+    onSave({ address: addr.trim(), city: city.trim(), state: st, zip });
+    onClose();
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <m.div
+          key="address-modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="address-modal-title"
+        >
+          <div
+            className="absolute inset-0 bg-navy-dark/60 backdrop-blur-sm"
+            onClick={onClose}
+            aria-hidden="true"
+          />
+          <m.div
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="relative w-full max-w-md rounded-sm border border-border/70 bg-surface p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] sm:p-7"
+          >
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div>
+                <h2
+                  id="address-modal-title"
+                  className="font-serif text-[1.375rem] font-semibold leading-tight text-text-primary"
+                >
+                  Custom pickup address
+                </h2>
+                <p className="mt-1 font-sans text-[0.8125rem] text-text-muted">
+                  This address will be used for this request only.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-shrink-0 rounded-sm p-1 text-text-muted transition-colors hover:bg-offwhite-alt hover:text-text-primary"
+                aria-label="Close"
+              >
+                <XIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSave} noValidate className="space-y-4">
+              <FormField
+                label="Address"
+                placeholder="123 Industrial Blvd"
+                value={addr}
+                onChange={(e) => setAddr(e.target.value)}
+                error={errors.addr}
+                required
+              />
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-[1fr_5.5rem_6.5rem]">
+                <FormField
+                  label="City"
+                  placeholder="Atlanta"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  error={errors.city}
+                  required
+                />
+                <FormField label="State" required error={errors.st}>
+                  {({ id, className }) => (
+                    <Select id={id} value={st} onChange={(e) => setSt(e.target.value)} className={className}>
+                      <option value="">—</option>
+                      {US_STATES.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </Select>
+                  )}
+                </FormField>
+                <FormField label="ZIP" required error={errors.zip}>
+                  {({ id, className }) => (
+                    <input
+                      id={id}
+                      inputMode="numeric"
+                      placeholder="30301"
+                      value={zip}
+                      onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                      className={className}
+                    />
+                  )}
+                </FormField>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="rounded-sm border border-border bg-surface px-4 py-2 font-sans text-[0.8125rem] font-medium text-text-muted transition-colors hover:border-navy hover:text-text-primary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 rounded-sm border-b-2 border-copper bg-accent px-5 py-2 font-sans text-[0.8125rem] font-semibold text-white transition-colors hover:bg-accent-hover"
+                >
+                  Use this address
+                </button>
+              </div>
+            </form>
+          </m.div>
+        </m.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export function CustomerRequestPage({ customer }) {
   const reduceMotion = useReducedMotion();
   const defaultStream = customer?.materials?.[0] || 'metal';
 
   const [material, setMaterial] = useState(defaultStream);
+  const [phone, setPhone] = useState(customer?.contact?.phone || '');
+  const [addrOverride, setAddrOverride] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [state, formAction, isPending] = useActionState(
     createPickupRequestAction,
     INITIAL_STATE,
   );
 
+  const defaultAddr = customer?.pickupAddress ?? {};
+  const activeAddr = addrOverride ?? defaultAddr;
   const fieldErrors = state?.fieldErrors ?? {};
 
   return (
@@ -95,6 +282,46 @@ export function CustomerRequestPage({ customer }) {
                 </Select>
               </FormField>
 
+              {/* ── Pickup address ── */}
+              <div className="rounded-sm border border-border/50 bg-offwhite-alt px-4 py-3">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="flex items-start gap-2.5">
+                    <MapPinIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-text-muted" />
+                    <div>
+                      <p className="font-sans text-[0.8125rem] font-semibold text-text-muted">
+                        Pickup address
+                      </p>
+                      <p className="mt-0.5 font-sans text-[0.875rem] text-text-primary">
+                        {formatAddr(activeAddr) || (
+                          <span className="text-text-muted">No address on file</span>
+                        )}
+                      </p>
+                      {addrOverride && (
+                        <button
+                          type="button"
+                          onClick={() => setAddrOverride(null)}
+                          className="mt-1 font-sans text-[0.75rem] text-text-muted underline transition-colors hover:text-text-primary"
+                        >
+                          Reset to default
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setModalOpen(true)}
+                    className="flex-shrink-0 font-sans text-[0.8125rem] font-semibold text-navy-light transition-colors hover:underline"
+                  >
+                    {formatAddr(activeAddr) ? 'Change' : 'Add address'}
+                  </button>
+                </div>
+              </div>
+
+              <input type="hidden" name="pickupAddress" value={activeAddr.address || ''} />
+              <input type="hidden" name="pickupCity" value={activeAddr.city || ''} />
+              <input type="hidden" name="pickupState" value={activeAddr.state || ''} />
+              <input type="hidden" name="pickupZip" value={activeAddr.zip || ''} />
+
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <FormField
                   label="On-site contact"
@@ -109,7 +336,8 @@ export function CustomerRequestPage({ customer }) {
                   placeholder="(770) 555-0123"
                   error={fieldErrors.contactPhone}
                   type="tel"
-                  defaultValue={customer?.contact?.phone || ''}
+                  value={phone}
+                  onChange={(e) => setPhone(formatPhone(e.target.value))}
                 />
               </div>
 
@@ -155,6 +383,12 @@ export function CustomerRequestPage({ customer }) {
           </AnimatePresence>
         </div>
       </div>
+      <AddressModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={setAddrOverride}
+        reduceMotion={reduceMotion}
+      />
     </>
   );
 }

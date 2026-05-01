@@ -47,7 +47,7 @@ function UrlNotice() {
   );
 }
 
-export function LoginForm() {
+export function LoginForm({ redirectTo = '' }) {
   const [state, formAction, isPending] = useActionState(loginAction, initialState);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -68,6 +68,7 @@ export function LoginForm() {
       </Suspense>
 
       <form action={formAction} noValidate className="mt-8 space-y-5">
+        {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
         <FormField
           label="Email"
           type="email"

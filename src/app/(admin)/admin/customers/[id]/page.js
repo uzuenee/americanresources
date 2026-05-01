@@ -23,7 +23,7 @@ export default async function AdminCustomerDetailPage({ params, searchParams }) 
 
     supabase
       .from('recycling_entries')
-      .select('id, entry_date, material, weight_lbs, notes, status')
+      .select('id, entry_date, material, weight_lbs, notes')
       .eq('customer_id', id)
       .order('entry_date', { ascending: false }),
 
@@ -37,12 +37,20 @@ export default async function AdminCustomerDetailPage({ params, searchParams }) 
   if (!customerRes.data) notFound();
 
   const row = customerRes.data;
+
+  // Derive a display location from the pickup address fields when the
+  // legacy location column is empty.
+  const derivedLocation =
+    row.location ||
+    [row.pickup_city, row.pickup_state].filter(Boolean).join(', ') ||
+    null;
+
   const customer = {
     id: row.id,
     company: row.company,
     status: row.status,
     since: row.since,
-    location: row.location,
+    location: derivedLocation,
     reportingCadence: row.reporting_cadence,
     materials: row.materials ?? [],
     totalWeight: Number(row.total_weight ?? 0),
@@ -62,7 +70,6 @@ export default async function AdminCustomerDetailPage({ params, searchParams }) 
     material: e.material,
     weight: e.weight_lbs,
     notes: e.notes,
-    status: e.status,
   }));
 
   const requests = (requestsRes.data ?? []).map((r) => ({

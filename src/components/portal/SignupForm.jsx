@@ -64,7 +64,8 @@ export function SignupForm() {
         </h1>
         <p className="mt-3 max-w-sm font-sans text-[0.9375rem] leading-relaxed text-text-muted">
           We&apos;ve sent a confirmation link to your email address. Click the
-          link to activate your account and get started.
+          link to verify your email. Our team will review your account and
+          notify you once it&apos;s approved.
         </p>
         <Link
           href="/login"
@@ -113,7 +114,7 @@ export function SignupForm() {
           required
           error={fieldErrors.email}
         />
-        <FormField label="Phone">
+        <FormField label="Phone" required error={fieldErrors.phone}>
           {({ id, className }) => (
             <input
               id={id}
@@ -125,6 +126,7 @@ export function SignupForm() {
               value={phone}
               onChange={(e) => setPhone(formatPhone(e.target.value))}
               className={className}
+              required
             />
           )}
         </FormField>
@@ -232,6 +234,9 @@ export function SignupForm() {
               {STRENGTH_LABELS[strength]}
             </span>
           </div>
+          <p className="mt-1.5 font-sans text-[0.75rem] text-text-muted/80">
+            At least 8 characters. Mix uppercase, lowercase, numbers, and symbols for a stronger password.
+          </p>
         </div>
 
         <div>
@@ -243,8 +248,8 @@ export function SignupForm() {
             />
             <span className="font-sans text-[0.8125rem] text-text-muted">
               I agree to the{' '}
-              <a href="#" className="text-navy-light underline">Terms of Service</a> and{' '}
-              <a href="#" className="text-navy-light underline">Privacy Policy</a>.
+              <a href="/terms" target="_blank" className="text-navy-light underline">Terms of Service</a> and{' '}
+              <a href="/privacy" target="_blank" className="text-navy-light underline">Privacy Policy</a>.
             </span>
           </label>
           {fieldErrors.agreed && (

@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { cache } from 'react';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { requireCustomer, requireAdmin } from '@/lib/dal';
 
 // Shapes the data that the portal/admin layout Server Components pass down
@@ -50,7 +50,7 @@ export const getAdminPortalSession = cache(_getAdminPortalSession);
 
 async function _getCustomerPortalSession() {
   const { user: authUser, profile } = await requireCustomer();
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const [{ data: customer }, recentActivity] = await Promise.all([
     supabase
@@ -82,6 +82,12 @@ async function _getCustomerPortalSession() {
             email: customer.contact_email,
             phone: customer.contact_phone,
           },
+          pickupAddress: {
+            address: customer.pickup_address,
+            city: customer.pickup_city,
+            state: customer.pickup_state,
+            zip: customer.pickup_zip,
+          },
         }
       : null,
     recentActivity,
@@ -90,7 +96,7 @@ async function _getCustomerPortalSession() {
 
 async function _getAdminPortalSession() {
   const { user: authUser, profile } = await requireAdmin();
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const recentActivity = await loadRecentActivity(supabase, { scope: 'all' });
 

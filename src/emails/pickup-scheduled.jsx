@@ -22,7 +22,7 @@ export function PickupScheduled({
         as="h1"
         className="mt-[8px] mb-0 font-serif text-[30px] leading-[36px] font-semibold text-text-primary"
       >
-        You're on the schedule for {scheduledDateLabel.split(',')[0]}.
+        You&apos;re on the schedule for {scheduledDateLabel.split(',')[0]}.
       </Heading>
 
       <Text className="mt-[16px] mb-0 text-[15px] leading-[24px] text-text-primary">
@@ -31,7 +31,7 @@ export function PickupScheduled({
 
       <Text className="mt-[12px] mb-[24px] text-[15px] leading-[24px] text-text-primary">
         Your pickup for <strong>{company}</strong> is confirmed. Our driver will
-        call your site contact when they're 30 minutes out.
+        call your site contact when they&apos;re 30 minutes out.
       </Text>
 
       <Section className="bg-sage-light rounded-[6px] p-[20px] mt-[8px]">

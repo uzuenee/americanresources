@@ -305,3 +305,123 @@ export const TrashIcon = (p) => (
     <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
   </Icon>
 );
+
+export const GripVerticalIcon = (p) => (
+  <Icon {...p}>
+    <circle cx="9" cy="5" r="1" /><circle cx="15" cy="5" r="1" />
+    <circle cx="9" cy="12" r="1" /><circle cx="15" cy="12" r="1" />
+    <circle cx="9" cy="19" r="1" /><circle cx="15" cy="19" r="1" />
+  </Icon>
+);
+
+export const PlusIcon = (p) => (
+  <Icon {...p}>
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </Icon>
+);
+
+export const CopyIcon = (p) => (
+  <Icon {...p}>
+    <rect x="9" y="9" width="13" height="13" rx="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </Icon>
+);
+
+export const LinkIcon = (p) => (
+  <Icon {...p}>
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+  </Icon>
+);
+
+export const GlobeIcon = (p) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+  </Icon>
+);
+
+export const ImageIcon = (p) => (
+  <Icon {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <polyline points="21 15 16 10 5 21" />
+  </Icon>
+);
+
+export const TypeIcon = (p) => (
+  <Icon {...p}>
+    <polyline points="4 7 4 4 20 4 20 7" />
+    <line x1="9" y1="20" x2="15" y2="20" />
+    <line x1="12" y1="4" x2="12" y2="20" />
+  </Icon>
+);
+
+export const ListIcon = (p) => (
+  <Icon {...p}>
+    <line x1="8" y1="6" x2="21" y2="6" />
+    <line x1="8" y1="12" x2="21" y2="12" />
+    <line x1="8" y1="18" x2="21" y2="18" />
+    <line x1="3" y1="6" x2="3.01" y2="6" />
+    <line x1="3" y1="12" x2="3.01" y2="12" />
+    <line x1="3" y1="18" x2="3.01" y2="18" />
+  </Icon>
+);
+
+export const QuoteIcon = (p) => (
+  <Icon {...p}>
+    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z" />
+    <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3z" />
+  </Icon>
+);
+
+export const AlertTriangleIcon = (p) => (
+  <Icon {...p}>
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+    <line x1="12" y1="9" x2="12" y2="13" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </Icon>
+);
+
+export const LightbulbIcon = (p) => (
+  <Icon {...p}>
+    <path d="M9 18h6" />
+    <path d="M10 22h4" />
+    <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" />
+  </Icon>
+);
+
+export const ExternalLinkIcon = (p) => (
+  <Icon {...p}>
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    <polyline points="15 3 21 3 21 9" />
+    <line x1="10" y1="14" x2="21" y2="3" />
+  </Icon>
+);
+
+export const TagIcon = (p) => (
+  <Icon {...p}>
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+    <line x1="7" y1="7" x2="7.01" y2="7" />
+  </Icon>
+);
+
+export const HashIcon = (p) => (
+  <Icon {...p}>
+    <line x1="4" y1="9" x2="20" y2="9" />
+    <line x1="4" y1="15" x2="20" y2="15" />
+    <line x1="10" y1="3" x2="8" y2="21" />
+    <line x1="16" y1="3" x2="14" y2="21" />
+  </Icon>
+);
+
+export const UploadIcon = (p) => (
+  <Icon {...p}>
+    <polyline points="16 16 12 12 8 16" />
+    <line x1="12" y1="12" x2="12" y2="21" />
+    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+    <polyline points="16 16 12 12 8 16" />
+  </Icon>
+);

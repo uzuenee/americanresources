@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PortalPageHeader } from '../PortalShell';
@@ -8,6 +8,7 @@ import { Card, CardHeader } from '../Card';
 import { StatusBadge } from '../StatusBadge';
 import { MaterialLabel } from '../MaterialChip';
 import { TruckIcon, FileTextIcon, ArrowRightIcon } from '../icons';
+import { useToast } from '../Toast';
 import { cn } from '@/utils/cn';
 
 function WelcomeBanner({ onDismiss }) {
@@ -64,9 +65,23 @@ function relativeTime(iso) {
   return `${diffMo} mo ago`;
 }
 
-export function CustomerDashboard({ customer, lastEntry, nextRequest, activity, showWelcome = false }) {
+export function CustomerDashboard({
+  customer,
+  lastEntry,
+  nextRequest,
+  activity,
+  showWelcome = false,
+  showRequested = false,
+}) {
   const router = useRouter();
+  const { toast } = useToast();
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcome);
+
+  useEffect(() => {
+    if (!showRequested) return;
+    toast({ title: 'Pickup request submitted successfully.' });
+    router.replace('/portal/dashboard', { scroll: false });
+  }, [router, showRequested, toast]);
 
   if (!customer) return null;
 
@@ -93,7 +108,7 @@ export function CustomerDashboard({ customer, lastEntry, nextRequest, activity, 
   return (
     <>
       <PortalPageHeader
-        title="Your account"
+        title="Dashboard"
         actions={
           <Link
             href="/portal/request"

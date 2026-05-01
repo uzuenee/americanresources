@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
-import { m, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { services } from '@/data/services';
 import { cn } from '@/utils/cn';
+import { submitContactForm } from '@/app/actions/contact';
+import { trackContactSubmission } from '@/lib/analytics';
 
 const initialState = {
   name: '',
@@ -17,15 +19,36 @@ function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function getFieldError(name, value) {
+  if (name === 'name' && !value.trim()) return 'Name is required';
+  if (name === 'company' && !value.trim()) return 'Company name is required';
+  if (name === 'email') {
+    if (!value.trim()) return 'Email is required';
+    if (!validateEmail(value)) return 'Please enter a valid email address.';
+  }
+  if (name === 'service' && !value) return 'Please select a service';
+  return '';
+}
+
+function formatPhone(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 10);
+  if (digits.length <= 3) return digits.length ? `(${digits}` : '';
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
 export function ContactForm() {
   const [form, setForm] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const formatted = name === 'phone' ? formatPhone(value) : value;
+    setForm((prev) => ({ ...prev, [name]: formatted }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
@@ -39,30 +62,40 @@ export function ContactForm() {
 
   const validateField = (name) => {
     const value = form[name];
-    let error = '';
-
-    if (name === 'name' && !value.trim()) error = 'Name is required';
-    if (name === 'company' && !value.trim()) error = 'Company name is required';
-    if (name === 'email') {
-      if (!value.trim()) error = 'Email is required';
-      else if (!validateEmail(value)) error = 'Please enter a valid email';
-    }
-    if (name === 'service' && !value) error = 'Please select a service';
+    const error = getFieldError(name, value);
 
     setErrors((prev) => ({ ...prev, [name]: error }));
     return !error;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const fields = ['name', 'company', 'email', 'service'];
     const allTouched = {};
     fields.forEach((f) => { allTouched[f] = true; });
     setTouched(allTouched);
 
-    const allValid = fields.every((f) => validateField(f));
-    if (allValid) {
-      setSubmitted(true);
+    const nextErrors = {};
+    fields.forEach((f) => {
+      const error = getFieldError(f, form[f]);
+      if (error) nextErrors[f] = error;
+    });
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setSubmitting(true);
+    try {
+      const result = await submitContactForm(form);
+      if (result.ok) {
+        trackContactSubmission(form.service);
+        setSubmitted(true);
+      } else {
+        setErrors((prev) => ({ ...prev, form: result.error || 'Something went wrong. Please try again.' }));
+      }
+    } catch {
+      setErrors((prev) => ({ ...prev, form: 'Something went wrong. Please try again.' }));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -76,9 +109,9 @@ export function ContactForm() {
       {submitted ? (
         <m.div
           key="success"
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: reduceMotion ? 0 : 0.5 }}
           className="flex flex-col items-center justify-center py-16 text-center"
           role="status"
         >
@@ -224,11 +257,16 @@ export function ContactForm() {
             />
           </div>
 
+          {errors.form && (
+            <p className="font-sans text-[0.875rem] text-danger text-center" role="alert">{errors.form}</p>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-accent text-white font-sans font-semibold text-base py-4 rounded-lg hover:bg-accent-hover active:scale-[0.99] transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-light"
+            disabled={submitting}
+            className="w-full bg-accent text-white font-sans font-semibold text-base py-4 rounded-lg hover:bg-accent-hover active:scale-[0.99] transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-light disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Send Your Inquiry
+            {submitting ? 'Sending...' : 'Send Your Inquiry'}
           </button>
         </m.form>
       )}

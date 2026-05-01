@@ -17,7 +17,10 @@ export default async function AdminCustomersPage() {
     id: row.id,
     company: row.company,
     status: row.status,
-    location: row.location,
+    location:
+      row.location ||
+      [row.pickup_city, row.pickup_state].filter(Boolean).join(', ') ||
+      null,
     materials: row.materials ?? [],
     totalWeight: Number(row.total_weight ?? 0),
     totalPickups: Number(row.total_pickups ?? 0),

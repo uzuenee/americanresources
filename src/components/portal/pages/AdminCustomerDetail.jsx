@@ -13,6 +13,7 @@ import { FormField, Select, Textarea } from '../FormField';
 import { useToast } from '../Toast';
 import { materialMeta } from '@/lib/materials';
 import { logManualEntryAction } from '@/app/actions/entries';
+import { approveCustomerAction } from '@/app/actions/customers';
 import { CheckCircleIcon, PhoneIcon, MailIcon } from '../icons';
 import { cn } from '@/utils/cn';
 
@@ -44,10 +45,18 @@ export function AdminCustomerDetail({ customer, entries, requests, initialTab })
     notFound();
   }
 
-  const openRequest = useMemo(
-    () => (requests ?? []).find((r) => r.status !== 'completed' && r.status !== 'cancelled'),
-    [requests]
-  );
+  const openRequest = useMemo(() => {
+    const open = (requests ?? []).filter(
+      (r) => r.status !== 'completed' && r.status !== 'cancelled'
+    );
+    if (open.length === 0) return null;
+    // Sort by the chronologically nearest date (scheduled > preferred)
+    return open.sort((a, b) => {
+      const dateA = a.scheduledDate || a.preferredDate || '';
+      const dateB = b.scheduledDate || b.preferredDate || '';
+      return dateA.localeCompare(dateB);
+    })[0];
+  }, [requests]);
 
   return (
     <>
@@ -117,12 +126,52 @@ export function AdminCustomerDetail({ customer, entries, requests, initialTab })
   );
 }
 
+function ApprovalBanner({ customerId }) {
+  const { toast } = useToast();
+  const [approving, setApproving] = useState(false);
+
+  const handleApprove = async () => {
+    setApproving(true);
+    const result = await approveCustomerAction(customerId);
+    if (result.ok) {
+      toast({ title: 'Account approved' });
+    } else {
+      toast({ title: 'Could not approve', description: result.error, variant: 'error' });
+      setApproving(false);
+    }
+  };
+
+  return (
+    <div className="mb-6 flex items-center justify-between gap-4 rounded-sm border border-[#F59E0B]/30 bg-[#FFFBEB] px-5 py-4">
+      <div>
+        <p className="font-sans text-[0.875rem] font-semibold text-[#92400E]">
+          This account is pending approval
+        </p>
+        <p className="mt-0.5 font-sans text-[0.8125rem] text-[#A16207]">
+          Review the details below, then approve to grant portal access.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={handleApprove}
+        disabled={approving}
+        className="flex-shrink-0 rounded-sm border-b-2 border-[#15803D] bg-[#16A34A] px-5 py-2.5 font-sans text-[0.8125rem] font-semibold text-white transition-colors hover:bg-[#15803D] disabled:opacity-60"
+      >
+        {approving ? 'Approving…' : 'Approve account'}
+      </button>
+    </div>
+  );
+}
+
 function OverviewTab({ customer, openRequest }) {
   const { toast } = useToast();
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
       <div className="flex flex-col gap-6">
+        {customer.status === 'pending' && (
+          <ApprovalBanner customerId={customer.id} />
+        )}
         <Card>
           <CardHeader title="Contact" />
           <DefList
@@ -268,11 +317,9 @@ function LogEntryCard({ customer, onLog }) {
           </FormField>
           <FormField label="Stream" error={fe.material}>
             <Select name="material" value={material} onChange={(e) => setMaterial(e.target.value)}>
-              {Object.keys(materialMeta)
-                .filter((k) => k !== 'mixed')
-                .map((key) => (
-                  <option key={key} value={key}>{materialMeta[key].label}</option>
-                ))}
+              {Object.keys(materialMeta).map((key) => (
+                <option key={key} value={key}>{materialMeta[key].label}</option>
+              ))}
             </Select>
           </FormField>
           <FormField label="Weight (lbs)" name="weight" placeholder="e.g., 1,250" type="number" error={fe.weight} />
@@ -334,7 +381,6 @@ function HistoryTab({ entries }) {
         </span>
       ),
     },
-    { key: 'status', header: 'Status', render: (row) => <StatusBadge status={row.status} /> },
   ];
 
   return (

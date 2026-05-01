@@ -1,7 +1,8 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { blogPosts } from '@/data/blogPosts';
+import { articles } from '@/data/articles';
+const blogPosts = articles.filter((a) => a.type === 'blog');
 import { AnimateOnScroll } from '@/components/ui/AnimateOnScroll';
 import { cn } from '@/utils/cn';
 
@@ -14,47 +15,49 @@ const categoryStyles = {
 function BlogCard({ post, featured = false }) {
   return (
     <article className="h-full">
-      <div
-        className={cn(
-          'relative overflow-hidden mb-5',
-          featured ? 'aspect-[16/9] rounded-2xl' : 'aspect-[16/10] rounded-xl'
-        )}
-      >
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          className="object-cover editorial-image"
-          sizes={featured ? '(max-width: 1024px) 100vw, 60vw' : '(max-width: 768px) 100vw, 33vw'}
-        />
-      </div>
-      <span
-        className={cn(
-          'inline-block font-sans text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3',
-          categoryStyles[post.category] || 'bg-navy-pale text-navy-light'
-        )}
-      >
-        {post.category}
-      </span>
-      <h3
-        className={cn(
-          'font-serif text-text-primary leading-tight line-clamp-2',
-          featured ? 'text-2xl md:text-3xl' : 'text-xl md:text-[1.375rem]'
-        )}
-      >
-        {post.title}
-      </h3>
-      <p
-        className={cn(
-          'font-sans text-text-muted leading-relaxed mt-2 line-clamp-2',
-          featured ? 'text-base md:text-lg' : 'text-[0.9375rem]'
-        )}
-      >
-        {post.excerpt}
-      </p>
-      <p className="font-sans text-[0.8125rem] text-text-muted mt-3">
-        {post.date} &middot; {post.readTime}
-      </p>
+      <Link href={`/blog/${post.slug}`} className="group block h-full">
+        <div
+          className={cn(
+            'relative overflow-hidden mb-5',
+            featured ? 'aspect-[16/9] rounded-2xl' : 'aspect-[16/10] rounded-xl'
+          )}
+        >
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            className="object-cover editorial-image transition-transform duration-500 group-hover:scale-[1.02]"
+            sizes={featured ? '(max-width: 1024px) 100vw, 60vw' : '(max-width: 768px) 100vw, 33vw'}
+          />
+        </div>
+        <span
+          className={cn(
+            'inline-block font-sans text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3',
+            categoryStyles[post.category] || 'bg-navy-pale text-navy-light'
+          )}
+        >
+          {post.category}
+        </span>
+        <h3
+          className={cn(
+            'font-serif text-text-primary leading-tight line-clamp-2 group-hover:text-navy-light transition-colors duration-200',
+            featured ? 'text-2xl md:text-3xl' : 'text-xl md:text-[1.375rem]'
+          )}
+        >
+          {post.title}
+        </h3>
+        <p
+          className={cn(
+            'font-sans text-text-muted leading-relaxed mt-2 line-clamp-2',
+            featured ? 'text-base md:text-lg' : 'text-[0.9375rem]'
+          )}
+        >
+          {post.excerpt}
+        </p>
+        <p className="font-sans text-[0.8125rem] text-text-muted mt-3">
+          {post.date} &middot; {post.readTime}
+        </p>
+      </Link>
     </article>
   );
 }
@@ -74,7 +77,7 @@ export function BlogPreview({ count = 3 }) {
             </h2>
           </AnimateOnScroll>
           <Link
-            href="/guides"
+            href="/blog"
             className="font-sans text-base text-accent hover:text-accent-hover hover:underline mt-4 md:mt-0 flex-shrink-0 group"
           >
             View All Articles{' '}

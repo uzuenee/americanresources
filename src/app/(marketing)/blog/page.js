@@ -1,62 +1,50 @@
-import Image from 'next/image';
-import { Hero } from '@/components/sections/Hero';
-import { AnimateOnScroll } from '@/components/ui/AnimateOnScroll';
-import { guides } from '@/data/guides';
+import { createClient } from '@/lib/supabase/server';
+import { articles } from '@/data/articles';
+const blogPosts = articles.filter((a) => a.type === 'blog');
+import { normalizeCmsPost } from '@/lib/article-utils';
+import { BlogListingClient } from './BlogListingClient';
 
 export const metadata = {
   title: 'Blog',
   description:
-    "In-depth guides to help your business navigate waste management, compliance, and sustainability in the Atlanta metro area.",
+    'Expert guidance on recycling, sustainability regulations, and environmental best practices for Atlanta businesses.',
+  openGraph: {
+    type: 'website',
+    title: 'Blog — American Resources',
+    description: 'Expert guidance on recycling, sustainability regulations, and environmental best practices for Atlanta businesses.',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Blog — American Resources',
+    description: 'Expert guidance on recycling, sustainability regulations, and environmental best practices for Atlanta businesses.',
+  },
 };
 
-export default function GuidesListingPage() {
-  return (
-    <>
-      <Hero
-        height="compact"
-        light
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Blog' },
-        ]}
-        title="Recycling Resources"
-        subtitle="In-depth articles to help your business navigate waste management, compliance, and sustainability."
-      />
+export default async function BlogListingPage() {
+  const supabase = await createClient();
 
-      <section className="bg-offwhite pb-12 md:pb-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-16 space-y-8">
-          {guides.map((guide, i) => (
-            <AnimateOnScroll key={guide.slug} delay={i * 0.1}>
-              <article className="bg-white rounded-2xl overflow-hidden shadow-sm">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-0">
-                  <div className="md:col-span-4 relative aspect-[16/10] md:aspect-auto">
-                    <Image
-                      src={guide.image}
-                      alt={guide.title}
-                      fill
-                      className="object-cover editorial-image"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </div>
-                  <div className="md:col-span-8 p-8 md:p-10 flex flex-col justify-center">
-                    <h2 className="font-serif text-xl md:text-2xl text-text-primary leading-tight">
-                      {guide.title}
-                    </h2>
-                    <p className="font-sans text-base text-text-muted leading-relaxed mt-3 line-clamp-3">
-                      {guide.description}
-                    </p>
-                    <div className="mt-5">
-                      <span className="font-sans text-sm text-text-muted/60">
-                        {guide.readTime}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </AnimateOnScroll>
-          ))}
-        </div>
-      </section>
-    </>
-  );
+  const { data: cmsPosts } = await supabase
+    .from('posts')
+    .select('id, title, slug, excerpt, type, status, hero_image, hero_alt, hero_credit, published_at, read_time_override, body, key_takeaways, faqs, footnotes, meta_description, category_id, content_categories(name)')
+    .eq('type', 'blog')
+    .eq('status', 'published')
+    .eq('visibility', 'public')
+    .order('published_at', { ascending: false });
+
+  const normalizedCms = (cmsPosts ?? []).map((row) => normalizeCmsPost({
+    ...row,
+    category_name: row.content_categories?.name ?? '',
+  }));
+
+  // Merge: CMS posts first, then static posts (skip any with matching slugs)
+  const cmsSlugSet = new Set(normalizedCms.map((p) => p.slug));
+  const staticFiltered = blogPosts.filter((p) => !cmsSlugSet.has(p.slug));
+  const allPosts = [...normalizedCms, ...staticFiltered];
+
+  // Collect unique categories from both sources
+  const categorySet = new Set();
+  allPosts.forEach((p) => { if (p.category) categorySet.add(p.category); });
+  const categories = ['All', ...Array.from(categorySet)];
+
+  return <BlogListingClient posts={allPosts} categories={categories} />;
 }

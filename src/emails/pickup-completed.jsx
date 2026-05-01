@@ -46,7 +46,7 @@ export function PickupCompleted({
       </Text>
 
       <Text className="mt-[20px] mb-0 text-[13px] leading-[20px] text-text-muted">
-        Spotting something off in the weight or material? Reply and we'll fix
+        Spotting something off in the weight or material? Reply and we&apos;ll fix
         it.
       </Text>
     </Layout>

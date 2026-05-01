@@ -8,16 +8,34 @@ import { StatusBadge } from '../StatusBadge';
 import { MaterialDotRow } from '../MaterialChip';
 import { materialMeta } from '@/lib/materials';
 import { SearchIcon, MapPinIcon, ArrowRightIcon } from '../icons';
+import { cn } from '@/utils/cn';
+
+const STATUS_FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'pending', label: 'Pending' },
+  { id: 'active', label: 'Active' },
+  { id: 'pilot', label: 'Pilot' },
+];
 
 // customers shape: { id, company, status, location, materials, totalWeight,
 //   openRequests, contact: { name, title } }
 export function AdminCustomerList({ customers }) {
   const [query, setQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+
+  const pendingCount = useMemo(
+    () => (customers ?? []).filter((c) => c.status === 'pending').length,
+    [customers]
+  );
 
   const filtered = useMemo(() => {
+    let list = customers ?? [];
+    if (statusFilter !== 'all') {
+      list = list.filter((c) => c.status === statusFilter);
+    }
     const q = query.trim().toLowerCase();
-    if (!q) return customers ?? [];
-    return (customers ?? []).filter((c) => {
+    if (!q) return list;
+    return list.filter((c) => {
       return (
         c.company.toLowerCase().includes(q) ||
         (c.contact?.name || '').toLowerCase().includes(q) ||
@@ -25,7 +43,7 @@ export function AdminCustomerList({ customers }) {
         (c.materials || []).some((m) => (materialMeta[m]?.label || '').toLowerCase().includes(q))
       );
     });
-  }, [customers, query]);
+  }, [customers, query, statusFilter]);
 
   return (
     <>
@@ -38,9 +56,12 @@ export function AdminCustomerList({ customers }) {
               <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
               <input
                 type="search"
-                placeholder="Search accounts, contacts, locations…"
+                placeholder="Search all accounts…"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  if (e.target.value.trim()) setStatusFilter('all');
+                }}
                 className="w-full rounded-sm border border-border bg-surface py-2 pl-9 pr-3 font-sans text-[0.8125rem] text-text-primary placeholder:text-text-muted/70 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/15 sm:w-80"
               />
             </label>
@@ -48,6 +69,37 @@ export function AdminCustomerList({ customers }) {
         }
       />
       <div className="mx-auto w-full max-w-7xl flex-1 px-6 py-8 lg:px-8">
+        <div className="mb-5 flex gap-1.5">
+          {STATUS_FILTERS.map((f) => {
+            const active = statusFilter === f.id;
+            const count = f.id === 'pending' ? pendingCount : null;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setStatusFilter(f.id)}
+                className={cn(
+                  'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-sans text-[0.8125rem] font-medium transition-colors',
+                  active
+                    ? 'bg-navy text-white'
+                    : 'bg-offwhite-alt text-text-muted hover:bg-border hover:text-text-primary'
+                )}
+              >
+                {f.label}
+                {count > 0 && (
+                  <span
+                    className={cn(
+                      'inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[0.6875rem] font-bold',
+                      active ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#92400E]'
+                    )}
+                  >
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
         {filtered.length === 0 ? (
           <div className="rounded-sm border border-border/70 bg-surface p-12 text-center">
             <p className="font-serif text-[1.25rem] font-semibold text-text-primary">

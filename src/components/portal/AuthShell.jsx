@@ -95,7 +95,7 @@ export function AuthShell({ children }) {
         </div>
 
         <div className="flex flex-1 items-start justify-start px-6 py-10 sm:px-10 lg:items-center lg:px-16 xl:px-24">
-          <div className="w-full max-w-[28rem]">
+          <div className="w-full max-w-lg">
             <AuthPageTransition>{children}</AuthPageTransition>
           </div>
         </div>

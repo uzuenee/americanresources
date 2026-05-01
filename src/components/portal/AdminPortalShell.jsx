@@ -6,11 +6,13 @@ import {
   UsersIcon,
   BarChart3Icon,
   SettingsIcon,
+  FileTextIcon,
 } from './icons';
 
 const adminNavItems = [
   { label: 'Dispatch', href: '/admin/dashboard', icon: LayoutDashboardIcon },
   { label: 'Accounts', href: '/admin/customers', icon: UsersIcon },
+  { label: 'Content', href: '/admin/content', icon: FileTextIcon },
   { label: 'Reporting', href: '/admin/reporting', icon: BarChart3Icon },
   { label: 'Settings', href: '/admin/settings', icon: SettingsIcon },
 ];

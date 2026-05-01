@@ -1,10 +1,16 @@
 import Link from 'next/link';
+import { verifySession } from '@/lib/dal';
 
 export const metadata = {
   title: 'Access denied',
 };
 
-export default function ForbiddenPage() {
+export default async function ForbiddenPage() {
+  const session = await verifySession();
+  const isAdmin = session?.profile?.role === 'admin';
+  const dashboardHref = isAdmin ? '/admin/dashboard' : '/portal/dashboard';
+  const dashboardLabel = isAdmin ? 'Go to admin' : 'Go to portal';
+
   return (
     <main
       id="main-content"
@@ -23,10 +29,10 @@ export default function ForbiddenPage() {
         </p>
         <div className="mt-8 flex items-center justify-center gap-4">
           <Link
-            href="/portal/dashboard"
-            className="inline-flex items-center rounded-md bg-forest px-4 py-2 text-sm font-medium text-white hover:bg-forest/90"
+            href={dashboardHref}
+            className="inline-flex items-center rounded-md bg-navy px-4 py-2 text-sm font-medium text-white hover:bg-navy-light"
           >
-            Go to portal
+            {dashboardLabel}
           </Link>
           <Link
             href="/"

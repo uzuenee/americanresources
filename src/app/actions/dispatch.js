@@ -7,6 +7,9 @@ import {
   sendPickupScheduled,
   sendPickupCompleted,
   sendRequestCancelled,
+  sendAdminPickupScheduled,
+  sendAdminPickupCompleted,
+  sendAdminRequestCancelled,
 } from '@/lib/email/events';
 import {
   materialLabel,
@@ -26,7 +29,7 @@ function siteUrl() {
 }
 
 export async function schedulePickupAction(requestId, scheduledDate, scheduledWindow) {
-  await requireAdmin();
+  const { profile: adminProfile } = await requireAdmin();
   const supabase = await createClient();
 
   // Pull customer info up-front so a missing email doesn't reveal itself only
@@ -67,12 +70,22 @@ export async function schedulePickupAction(requestId, scheduledDate, scheduledWi
     }
   }
 
+  sendAdminPickupScheduled({
+    requestId,
+    company: req?.customers?.company || '',
+    materialLabel: materialLabel(req.material),
+    scheduledDateLabel: formatDate(scheduledDate),
+    scheduledWindowLabel: timeWindowLabel(scheduledWindow),
+    scheduledBy: adminProfile.full_name || 'Admin',
+    adminUrl: `${siteUrl()}/admin/dashboard`,
+  });
+
   revalidatePath('/admin/dashboard');
   return { ok: true };
 }
 
 export async function markLoadedAction(requestId) {
-  await requireAdmin();
+  const { profile: adminProfile } = await requireAdmin();
   const supabase = await createClient();
 
   // Pull just enough to create a recycling_entry AND fire the email.
@@ -120,13 +133,22 @@ export async function markLoadedAction(requestId) {
     }
   }
 
+  sendAdminPickupCompleted({
+    requestId,
+    company: req.customers?.company || '',
+    materialLabel: materialLabel(req.material),
+    weightLbs: Number(req.estimated_weight),
+    entryDateLabel: formatDate(today),
+    adminUrl: `${siteUrl()}/admin/customers/${req.customer_id}`,
+  });
+
   revalidatePath('/admin/dashboard');
   revalidatePath(`/admin/customers`);
   return { ok: true };
 }
 
 export async function deletePickupAction(requestId) {
-  await requireAdmin();
+  const { profile: adminProfile } = await requireAdmin();
   const supabase = await createClient();
 
   // Fetch BEFORE deleting so the cancellation email has a recipient.
@@ -160,6 +182,14 @@ export async function deletePickupAction(requestId) {
       console.error('[email] request-cancelled failed', e);
     }
   }
+
+  sendAdminRequestCancelled({
+    requestId: req.id,
+    company: req?.customers?.company || '',
+    materialLabel: materialLabel(req.material),
+    preferredDateLabel: formatDate(req.preferred_date),
+    cancelledBy: adminProfile.full_name || 'Admin',
+  });
 
   revalidatePath('/admin/dashboard');
   return { ok: true };

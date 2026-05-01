@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/dal';
 import { materialKeys } from '@/lib/materials';
 
@@ -35,7 +35,7 @@ export async function logManualEntryAction(customerId, _prevState, formData) {
     return { fieldErrors, error: null };
   }
 
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from('recycling_entries').insert({
     customer_id: customerId,
     material,
@@ -51,12 +51,14 @@ export async function logManualEntryAction(customerId, _prevState, formData) {
   revalidatePath(`/admin/customers/${customerId}`);
   revalidatePath('/admin/customers');
   revalidatePath('/admin/reporting');
-  return { fieldErrors: {}, error: null, ok: true };
+  revalidatePath('/portal/dashboard');
+  revalidatePath('/portal/history');
+  return { fieldErrors: {}, error: null, ok: true, _weight: weightNum };
 }
 
 export async function deleteEntryAction(entryId) {
   await requireAdmin();
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('recycling_entries')
@@ -67,5 +69,7 @@ export async function deleteEntryAction(entryId) {
 
   revalidatePath('/admin/reporting');
   revalidatePath('/admin/customers');
+  revalidatePath('/portal/dashboard');
+  revalidatePath('/portal/history');
   return { ok: true };
 }
